@@ -1,2 +1,0 @@
-# compilers-principle
-- git test
