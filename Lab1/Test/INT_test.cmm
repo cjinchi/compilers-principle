@@ -1,0 +1,8 @@
+int main()
+{
+	int a = 0;
+	int b = 0123;
+	int c = 123123;
+	int d = 212323123;
+	int e = 0x123;
+}

@@ -1,0 +1,18 @@
+struct abc
+{
+	int a;
+	float b;
+	float _cba;
+};
+int main()
+{
+	int a[5];
+	a[0]=1;
+	a[4]=2;
+	int b,c;
+	int d = b && c;
+	int e = d || b;
+	e = d * b;
+	e = d/b;
+	return 0;
+}

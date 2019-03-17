@@ -1,16 +1,41 @@
 %{
-    /* 此处省略#include部分 */
-    #include <stdio.h>
-    int chars = 0;
-    int words = 0;
-    int lines = 0;
+    //声明变量
 %}
 %option yylineno
+positive-digit [1-9]
+digit [0-9]
 letter [a-zA-Z]
+letterOrUs [a-zA-Z_]
 %%
-{letter}+ { words++; chars+= yyleng;printf("%d\n",yylineno); }
-\n { chars++; lines++; }
-. { chars++; }
+int|float {printf("TYPE\n");}
+struct {printf("STRUCT\n");}
+return {printf("RETURN\n");}
+if {printf("IF\n");}
+else {printf("ELSE\n");}
+while {printf("WHILE\n");}
+\( {printf("LP\n");}
+\) {printf("RP\n");}
+\[ {printf("LB\n");}
+\] {printf("RB\n");}
+\{ {printf("LC\n");}
+\} {printf("RC\n");}
+; {printf("SEMI\n");}
+, {printf("COMMA\n");}
+= {printf("ASSIGNOP\n");}
+>|<|(>=)|(<=)|(==)|(!=) {printf("RELOP\n");}
+\+ {printf("PLUS\n");}
+- {printf("MINUS\n");}
+\* {printf("STAR\n");}
+\/ {printf("DIV\n");}
+&& {printf("AND\n");}
+\|\| {printf("OR\n");}
+! {printf("NOT\n");}
+(0)|({positive-digit}{digit}*) { printf("INT: %d\n",atoi(yytext)); }
+{digit}+\.{digit}+ {printf("FLOAT: %f\n",atof(yytext));}
+\. {printf("DOT\n");}
+({letterOrUs})({letterOrUs}|{digit})* { printf("ID: %s\n",yytext);}
+\n {  }
+. {  }
 %%
 int main(int argc, char** argv)
 {
@@ -23,6 +48,5 @@ int main(int argc, char** argv)
         }
     }
     yylex();
-    printf("%8d%8d%8d\n", lines, words, chars);
     return 0;
  }
