@@ -9,7 +9,7 @@ letter [a-zA-Z]
 letterOrUs [a-zA-Z_]
 delim [ \t\n\r]
 %%
-int|float {return TYPE;}
+int|float {printf("type\n");return TYPE;}
 struct {return STRUCT;}
 return {return RETURN;}
 if {return IF;}
@@ -23,8 +23,8 @@ while {return WHILE;}
 \} {return RC;}
 ; {return SEMI;}
 , {return COMMA;}
-= {return ASSIGNOP;}
->|<|(>=)|(<=)|(==)|(!=) {yylval = yytext;return RELOP;}
+= {printf("assignop\n");return ASSIGNOP;}
+>|<|(>=)|(<=)|(==)|(!=) {yylval.str_val = strdup(yytext);return RELOP;}
 \+ {return PLUS;}
 - {return MINUS;}
 \* {return STAR;}
@@ -32,10 +32,10 @@ while {return WHILE;}
 && {return AND;}
 \|\| {return OR;}
 ! {return NOT;}
-(0)|({positive-digit}{digit}*) { yylval = atoi(yytext);return INT;}
-{digit}+\.{digit}+ {yylval = atof(yytext);return FLOAT;}
+(0)|({positive-digit}{digit}*) { yylval.int_val = atoi(yytext);return INT;}
+{digit}+\.{digit}+ {yylval.float_val = atof(yytext);return FLOAT;}
 \. {return DOT;}
-({letterOrUs})({letterOrUs}|{digit})* { yylval = (int)strdup(text);return ID;}
+({letterOrUs})({letterOrUs}|{digit})* { printf("%s\n",yytext);yylval.str_val = strdup(yytext);return ID;}
 {delim} {  }
 . { printf("Error type A at Line %d: Mysterious characters \'%s\'\n",yylineno, yytext); }
 %%
