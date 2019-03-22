@@ -1,0 +1,106 @@
+Terminals unused in grammar
+
+   FLOAT
+   SEMI
+   COMMA
+   ASSIGNOP
+   RELOP
+   ID
+   TYPE
+   DOT
+   PLUS
+   MINUS
+   STAR
+   DIV
+   AND
+   OR
+   NOT
+   LP
+   RP
+   LB
+   RB
+   LC
+   RC
+   STRUCT
+   RETURN
+   IF
+   ELSE
+   WHILE
+
+
+Grammar
+
+    0 $accept: Num $end
+
+    1 Num: INT
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+INT (258) 1
+FLOAT (259)
+SEMI (260)
+COMMA (261)
+ASSIGNOP (262)
+RELOP (263)
+ID (264)
+TYPE (265)
+DOT (266)
+PLUS (267)
+MINUS (268)
+STAR (269)
+DIV (270)
+AND (271)
+OR (272)
+NOT (273)
+LP (274)
+RP (275)
+LB (276)
+RB (277)
+LC (278)
+RC (279)
+STRUCT (280)
+RETURN (281)
+IF (282)
+ELSE (283)
+WHILE (284)
+
+
+Nonterminals, with rules where they appear
+
+$accept (30)
+    on left: 0
+Num (31)
+    on left: 1, on right: 0
+
+
+state 0
+
+    0 $accept: . Num $end
+
+    INT  shift, and go to state 1
+
+    Num  go to state 2
+
+
+state 1
+
+    1 Num: INT .
+
+    $default  reduce using rule 1 (Num)
+
+
+state 2
+
+    0 $accept: Num . $end
+
+    $end  shift, and go to state 3
+
+
+state 3
+
+    0 $accept: Num $end .
+
+    $default  accept

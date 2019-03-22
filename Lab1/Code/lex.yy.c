@@ -1,5 +1,6 @@
+#line 2 "./lex.yy.c"
 
-#line 3 "lex.yy.c"
+#line 4 "./lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -519,34 +520,10 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "lexical.l"
-#line 2 "lexical.l"
-    typedef enum
-    {
-        INT, FLOAT, ID,
-        SEMI, COMMA, ASSIGNOP, RELOP,
-        PLUS, MINUS, STAR, DIV,
-        AND, OR, DOT, NOT,
-        TYPE, LP, RP, LB, RB, LC, RC,
-        STRUCT, RETURN, IF, ELSE, WHILE
-    } type_t;
-    typedef struct item_struct
-    {
-        type_t type;
-        unsigned char buffer[100];
-        struct item_struct *next;
-    } item_t;
-    typedef enum
-    {
-        FALSE,TRUE
-    }boolean;
-
-    item_t* head = NULL;
-    item_t* tail = NULL;
-    boolean has_error = FALSE;
-    void error_type_A(int line_num,char* yytext);
-    void push_item(type_t type,char* yytext);
-#line 550 "lex.yy.c"
+#line 1 "./lexical.l"
+#line 2 "./lexical.l"
+    #include "syntax.tab.h"
+#line 527 "./lex.yy.c"
 
 #define INITIAL 0
 
@@ -733,9 +710,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 34 "lexical.l"
+#line 10 "./lexical.l"
 
-#line 739 "lex.yy.c"
+#line 716 "./lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -830,156 +807,156 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 35 "lexical.l"
-{push_item(TYPE,yytext);}
+#line 11 "./lexical.l"
+{return TYPE;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 36 "lexical.l"
-{push_item(STRUCT,yytext);}
+#line 12 "./lexical.l"
+{return STRUCT;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 37 "lexical.l"
-{push_item(RETURN,yytext);}
+#line 13 "./lexical.l"
+{return RETURN;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 38 "lexical.l"
-{push_item(IF,yytext);}
+#line 14 "./lexical.l"
+{return IF;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 39 "lexical.l"
-{push_item(ELSE,yytext);}
+#line 15 "./lexical.l"
+{return ELSE;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 40 "lexical.l"
-{push_item(WHILE,yytext);}
+#line 16 "./lexical.l"
+{return WHILE;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 41 "lexical.l"
-{push_item(LP,yytext);}
+#line 17 "./lexical.l"
+{return LP;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 42 "lexical.l"
-{push_item(RP,yytext);}
+#line 18 "./lexical.l"
+{return RP;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 43 "lexical.l"
-{push_item(LB,yytext);}
+#line 19 "./lexical.l"
+{return LB;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 44 "lexical.l"
-{push_item(RB,yytext);}
+#line 20 "./lexical.l"
+{return RB;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 45 "lexical.l"
-{push_item(LC,yytext);}
+#line 21 "./lexical.l"
+{return LC;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 46 "lexical.l"
-{push_item(RC,yytext);}
+#line 22 "./lexical.l"
+{return RC;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 47 "lexical.l"
-{push_item(SEMI,yytext);}
+#line 23 "./lexical.l"
+{return SEMI;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 48 "lexical.l"
-{push_item(COMMA,yytext);}
+#line 24 "./lexical.l"
+{return COMMA;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 49 "lexical.l"
-{push_item(ASSIGNOP,yytext);}
+#line 25 "./lexical.l"
+{return ASSIGNOP;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 50 "lexical.l"
-{push_item(RELOP,yytext);}
+#line 26 "./lexical.l"
+{yylval = yytext;return RELOP;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 51 "lexical.l"
-{push_item(PLUS,yytext);}
+#line 27 "./lexical.l"
+{return PLUS;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 52 "lexical.l"
-{push_item(MINUS,yytext);}
+#line 28 "./lexical.l"
+{return MINUS;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 53 "lexical.l"
-{push_item(STAR,yytext);}
+#line 29 "./lexical.l"
+{return STAR;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 54 "lexical.l"
-{push_item(DIV,yytext);}
+#line 30 "./lexical.l"
+{return DIV;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 55 "lexical.l"
-{push_item(AND,yytext);}
+#line 31 "./lexical.l"
+{return AND;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 56 "lexical.l"
-{push_item(OR,yytext);}
+#line 32 "./lexical.l"
+{return OR;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 57 "lexical.l"
-{push_item(NOT,yytext);}
+#line 33 "./lexical.l"
+{return NOT;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 58 "lexical.l"
-{ push_item(INT,yytext);}
+#line 34 "./lexical.l"
+{ yylval = atoi(yytext);return INT;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 59 "lexical.l"
-{push_item(FLOAT,yytext);}
+#line 35 "./lexical.l"
+{yylval = atof(yytext);return FLOAT;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 60 "lexical.l"
-{push_item(DOT,yytext);}
+#line 36 "./lexical.l"
+{return DOT;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 61 "lexical.l"
-{ push_item(ID,yytext);}
+#line 37 "./lexical.l"
+{ yylval = yytext;return ID;}
 	YY_BREAK
 case 28:
 /* rule 28 can match eol */
 YY_RULE_SETUP
-#line 62 "lexical.l"
+#line 38 "./lexical.l"
 {  }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 63 "lexical.l"
-{ error_type_A(yylineno,yytext); }
+#line 39 "./lexical.l"
+{ printf("Error type A at Line %d: Mysterious characters \'%s\'\n",yylineno, yytext); }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 64 "lexical.l"
+#line 40 "./lexical.l"
 ECHO;
 	YY_BREAK
-#line 983 "lex.yy.c"
+#line 960 "./lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1989,48 +1966,21 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 64 "lexical.l"
+#line 40 "./lexical.l"
 
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-    if (argc > 1)
+    if (argc <= 1)
+        return 1;
+    FILE *f = fopen(argv[1], "r");
+    if (!f)
     {
-        if (!(yyin = fopen(argv[1], "r")))
-        {
-            perror(argv[1]);
-            return 1;
-        }
+        perror(argv[1]);
+        return 1;
     }
-    yylex();
-    if(has_error == FALSE)
-    {
-        printf("【print tree here】");
-    }
+    yyrestart(f);
+    yyparse();
     return 0;
-}
-
-void error_type_A(int line_num,char* yytext)
-{
-    has_error = TRUE;
-    printf("Error type A at Line %d: Mysterious character \"%s\".\n",line_num,yytext);
-}
-
-void push_item(type_t type,char* yytext)
-{
-    item_t* item = (item_t*)malloc(sizeof(item_t));
-    item -> type = type;
-    strncpy(item->buffer,yytext,100);
-
-    if(head == NULL)
-    {
-        head = item;
-        tail = item;
-    }
-    else
-    {
-        tail->next = item;
-        tail = item;
-    }
 }
 
