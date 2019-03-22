@@ -14,5 +14,6 @@ int main()
 	int e = d || b;
 	e = d * b;
 	e = d/b;
+	e = ~e;
 	return 0;
 }
