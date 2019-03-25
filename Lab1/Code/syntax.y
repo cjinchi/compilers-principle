@@ -1,9 +1,11 @@
 %{
+    #define YYDEBUG 1
     #include <stdio.h>
     int yylex();
     void yyerror(char *s){printf("%s\n",s);}
     int fileno(FILE* stream); 
 %}
+%locations
 %union {
     int int_val;
     float float_val;
@@ -74,7 +76,7 @@ DefList : Def DefList
 Def : Specifier DecList SEMI
     ;
 DecList : Dec 
-    : Dec COMMA DecList
+    | Dec COMMA DecList
     ;
 Dec : VarDec
     | VarDec ASSIGNOP Exp

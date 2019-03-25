@@ -1,6 +1,12 @@
 %{
     #include "syntax.tab.h"
     #include <string.h>
+    int yycolumn = 1;
+    #define YY_USER_ACTION \
+        yylloc.first_line = yylloc.last_line = yylineno; \
+        yylloc.first_column = yycolumn; \
+        yylloc.last_column = yycolumn + yyleng - 1; \
+        yycolumn += yyleng;
 %}
 %option yylineno
 positive-digit [1-9]
@@ -36,6 +42,7 @@ while {return WHILE;}
 {digit}+\.{digit}+ {yylval.float_val = atof(yytext);return FLOAT;}
 \. {return DOT;}
 ({letterOrUs})({letterOrUs}|{digit})* { printf("%s\n",yytext);yylval.str_val = strdup(yytext);return ID;}
+\n {yycolumn = 1;}
 {delim} {  }
 . { printf("Error type A at Line %d: Mysterious characters \'%s\'\n",yylineno, yytext); }
 %%
@@ -50,6 +57,7 @@ int main(int argc, char **argv)
         return 1;
     }
     yyrestart(f);
+    yydebug = 1;
     yyparse();
     return 0;
 }
