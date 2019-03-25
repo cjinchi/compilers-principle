@@ -11,6 +11,7 @@
     float float_val;
     char* str_val;
 }
+
 %token <int_val> INT 
 %token <float_val> FLOAT
 %token SEMI COMMA ASSIGNOP 
@@ -18,13 +19,25 @@
 %token <str_val> ID 
 %token <str_val> TYPE
 %token DOT
-%token PLUS MINUS STAR DIV
+%token PLUS MINUS
+%token STAR DIV
 %token AND OR NOT
 %token LP RP LB RB LC RC
 %token STRUCT
 %token RETURN IF ELSE WHILE
+
+%right ASSIGNOP
+%left OR
+%left AND
+%left RELOP
+%left PLUS MINUS
+%left STAR DIV
+%right NOT NEG
+%left LP RP LB RB DOT
+
+
 %%
-Program : ExtDefList {printf("program\n");}
+Program : ExtDefList { printf("【program】\n"); }
     ;
 ExtDefList : ExtDef ExtDefList
     | /* empty */
@@ -90,7 +103,7 @@ Exp : Exp ASSIGNOP Exp
     | Exp STAR Exp
     | Exp DIV Exp
     | LP Exp RP
-    | MINUS Exp
+    | MINUS Exp %prec NEG
     | NOT Exp
     | ID LP Args RP
     | ID LP RP

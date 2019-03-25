@@ -15,7 +15,7 @@ letter [a-zA-Z]
 letterOrUs [a-zA-Z_]
 delim [ \t\n\r]
 %%
-int|float {printf("type\n");return TYPE;}
+int|float {return TYPE;}
 struct {return STRUCT;}
 return {return RETURN;}
 if {return IF;}
@@ -29,7 +29,7 @@ while {return WHILE;}
 \} {return RC;}
 ; {return SEMI;}
 , {return COMMA;}
-= {printf("assignop\n");return ASSIGNOP;}
+= {return ASSIGNOP;}
 >|<|(>=)|(<=)|(==)|(!=) {yylval.str_val = strdup(yytext);return RELOP;}
 \+ {return PLUS;}
 - {return MINUS;}
@@ -41,7 +41,7 @@ while {return WHILE;}
 (0)|({positive-digit}{digit}*) { yylval.int_val = atoi(yytext);return INT;}
 {digit}+\.{digit}+ {yylval.float_val = atof(yytext);return FLOAT;}
 \. {return DOT;}
-({letterOrUs})({letterOrUs}|{digit})* { printf("%s\n",yytext);yylval.str_val = strdup(yytext);return ID;}
+({letterOrUs})({letterOrUs}|{digit})* { yylval.str_val = strdup(yytext);return ID;}
 \n {yycolumn = 1;}
 {delim} {  }
 . { printf("Error type A at Line %d: Mysterious characters \'%s\'\n",yylineno, yytext); }
