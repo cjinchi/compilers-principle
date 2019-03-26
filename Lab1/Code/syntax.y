@@ -1,8 +1,9 @@
 %{
-    #define YYDEBUG 1
+    // #define YYDEBUG 1
     #include <stdio.h>
+    int yylineno;
     int yylex();
-    void yyerror(char *s){printf("%s\n",s);}
+    void yyerror(char *s){printf("%s at line %d\n",s,yylineno);}
     int fileno(FILE* stream); 
 %}
 %locations
@@ -35,9 +36,12 @@
 %right NOT NEG
 %left LP RP LB RB DOT
 
+%nonassoc LOWER_THAN_ELSE
+%nonassoc ELSE
+
 
 %%
-Program : ExtDefList { printf("【program】\n"); }
+Program : ExtDefList { printf("!!![program]!!!\n"); }
     ;
 ExtDefList : ExtDef ExtDefList
     | /* empty */
@@ -79,9 +83,10 @@ StmtList : Stmt StmtList
 Stmt : Exp SEMI
     | CompSt
     | RETURN Exp SEMI
-    | IF LP Exp RP Stmt
+    | IF LP Exp RP Stmt %prec LOWER_THAN_ELSE
     | IF LP Exp RP Stmt ELSE Stmt
     | WHILE LP Exp RP Stmt
+    | error SEMI
     ;
 DefList : Def DefList
     | /* empty */
