@@ -64,8 +64,8 @@
      IF = 282,
      ELSE = 283,
      WHILE = 284,
-     NEG = 285,
-     LOWER_THAN_ELSE = 286
+     LOWER_THAN_ELSE = 285,
+     NEG = 286
    };
 #endif
 

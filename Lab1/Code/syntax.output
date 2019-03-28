@@ -114,8 +114,8 @@ RETURN (281) 28
 IF (282) 29 30
 ELSE (283) 30
 WHILE (284) 31
-NEG (285)
-LOWER_THAN_ELSE (286)
+LOWER_THAN_ELSE (285)
+NEG (286)
 
 
 Nonterminals, with rules where they appear

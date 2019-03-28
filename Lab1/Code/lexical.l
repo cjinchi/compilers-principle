@@ -39,7 +39,7 @@ while {return WHILE;}
 \|\| {return OR;}
 ! {return NOT;}
 (0)|({positive-digit}{digit}*) { yylval.int_val = atoi(yytext);return INT;}
-{digit}+\.{digit}+ {yylval.float_val = atof(yytext);return FLOAT;}
+({digit}+\.{digit}+)|((({digit}*\.{digit}+)|({digit}+\.{digit}*))(e|E)((\+|-)?)({digit}+)) {yylval.float_val = atof(yytext);return FLOAT;}
 \. {return DOT;}
 ({letterOrUs})({letterOrUs}|{digit})* { yylval.str_val = strdup(yytext);return ID;}
 \n {yycolumn = 1;}

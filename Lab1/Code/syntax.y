@@ -27,6 +27,9 @@
 %token STRUCT
 %token RETURN IF ELSE WHILE
 
+%nonassoc LOWER_THAN_ELSE
+%nonassoc ELSE
+
 %right ASSIGNOP
 %left OR
 %left AND
@@ -35,9 +38,6 @@
 %left STAR DIV
 %right NOT NEG
 %left LP RP LB RB DOT
-
-%nonassoc LOWER_THAN_ELSE
-%nonassoc ELSE
 
 
 %%
@@ -86,7 +86,7 @@ Stmt : Exp SEMI
     | IF LP Exp RP Stmt %prec LOWER_THAN_ELSE
     | IF LP Exp RP Stmt ELSE Stmt
     | WHILE LP Exp RP Stmt
-    | error SEMI
+    | error SEMI 
     ;
 DefList : Def DefList
     | /* empty */

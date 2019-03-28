@@ -131,8 +131,8 @@
      IF = 282,
      ELSE = 283,
      WHILE = 284,
-     NEG = 285,
-     LOWER_THAN_ELSE = 286
+     LOWER_THAN_ELSE = 285,
+     NEG = 286
    };
 #endif
 
@@ -511,7 +511,7 @@ static const char *const yytname[] =
   "$end", "error", "$undefined", "INT", "FLOAT", "SEMI", "COMMA",
   "ASSIGNOP", "RELOP", "ID", "TYPE", "DOT", "PLUS", "MINUS", "STAR", "DIV",
   "AND", "OR", "NOT", "LP", "RP", "LB", "RB", "LC", "RC", "STRUCT",
-  "RETURN", "IF", "ELSE", "WHILE", "NEG", "LOWER_THAN_ELSE", "$accept",
+  "RETURN", "IF", "ELSE", "WHILE", "LOWER_THAN_ELSE", "NEG", "$accept",
   "Program", "ExtDefList", "ExtDef", "ExtDecList", "Specifier",
   "StructSpecifier", "OptTag", "Tag", "VarDec", "FunDec", "VarList",
   "ParamDec", "CompSt", "StmtList", "Stmt", "DefList", "Def", "DecList",
