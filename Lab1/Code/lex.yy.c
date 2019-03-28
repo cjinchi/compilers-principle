@@ -528,8 +528,6 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "./lexical.l"
 #line 2 "./lexical.l"
-    
-
     #include "syntax.tab.h"
     #include "TreeNode.h"
     #include <string.h>
@@ -539,6 +537,8 @@ char *yytext;
         yylloc.first_column = yycolumn; \
         yylloc.last_column = yycolumn + yyleng - 1; \
         yycolumn += yyleng;
+
+    #define TOKEN_ASSIGN_YYLVAL(token_type) yylval=create_token_node(token_type,yylineno);
 #line 543 "./lex.yy.c"
 
 #define INITIAL 0
@@ -824,137 +824,137 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 21 "./lexical.l"
-{return TYPE;}
+{TOKEN_ASSIGN_YYLVAL(TYPE);return TYPE;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 22 "./lexical.l"
-{return STRUCT;}
+{TOKEN_ASSIGN_YYLVAL(STRUCT);return STRUCT;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 23 "./lexical.l"
-{return RETURN;}
+{TOKEN_ASSIGN_YYLVAL(RETURN);return RETURN;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 24 "./lexical.l"
-{return IF;}
+{TOKEN_ASSIGN_YYLVAL(IF);return IF;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 25 "./lexical.l"
-{return ELSE;}
+{TOKEN_ASSIGN_YYLVAL(ELSE);return ELSE;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 26 "./lexical.l"
-{return WHILE;}
+{TOKEN_ASSIGN_YYLVAL(WHILE);return WHILE;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 27 "./lexical.l"
-{return LP;}
+{TOKEN_ASSIGN_YYLVAL(LP);return LP;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 28 "./lexical.l"
-{return RP;}
+{TOKEN_ASSIGN_YYLVAL(RP);return RP;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 29 "./lexical.l"
-{return LB;}
+{TOKEN_ASSIGN_YYLVAL(LB);return LB;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 30 "./lexical.l"
-{return RB;}
+{TOKEN_ASSIGN_YYLVAL(RB);return RB;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 31 "./lexical.l"
-{return LC;}
+{TOKEN_ASSIGN_YYLVAL(LC);return LC;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 32 "./lexical.l"
-{return RC;}
+{TOKEN_ASSIGN_YYLVAL(RC);return RC;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 33 "./lexical.l"
-{return SEMI;}
+{TOKEN_ASSIGN_YYLVAL(SEMI);return SEMI;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 34 "./lexical.l"
-{return COMMA;}
+{TOKEN_ASSIGN_YYLVAL(COMMA);return COMMA;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 35 "./lexical.l"
-{return ASSIGNOP;}
+{TOKEN_ASSIGN_YYLVAL(ASSIGNOP);return ASSIGNOP;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 36 "./lexical.l"
-{return RELOP;}
+{TOKEN_ASSIGN_YYLVAL(RELOP);yylval->value.str_val = strdup(yytext);return RELOP;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 37 "./lexical.l"
-{return PLUS;}
+{TOKEN_ASSIGN_YYLVAL(PLUS);return PLUS;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 38 "./lexical.l"
-{return MINUS;}
+{TOKEN_ASSIGN_YYLVAL(MINUS);return MINUS;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 39 "./lexical.l"
-{return STAR;}
+{TOKEN_ASSIGN_YYLVAL(STAR);return STAR;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 40 "./lexical.l"
-{return DIV;}
+{TOKEN_ASSIGN_YYLVAL(DIV);return DIV;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 41 "./lexical.l"
-{return AND;}
+{TOKEN_ASSIGN_YYLVAL(AND);return AND;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 42 "./lexical.l"
-{return OR;}
+{TOKEN_ASSIGN_YYLVAL(OR);return OR;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 43 "./lexical.l"
-{return NOT;}
+{TOKEN_ASSIGN_YYLVAL(NOT);return NOT;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 44 "./lexical.l"
-{yylval = create_node("INT");yylval->value.int_val = atoi(yytext);return INT;}
+{TOKEN_ASSIGN_YYLVAL(INT);yylval->value.int_val = atoi(yytext);return INT;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 45 "./lexical.l"
-{return FLOAT;}
+{TOKEN_ASSIGN_YYLVAL(FLOAT);yylval->value.float_val = atof(yytext);return FLOAT;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 46 "./lexical.l"
-{return DOT;}
+{TOKEN_ASSIGN_YYLVAL(DOT);return DOT;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 47 "./lexical.l"
-{ return ID;}
+{TOKEN_ASSIGN_YYLVAL(ID);yylval->value.str_val = strdup(yytext); return ID;}
 	YY_BREAK
 case 28:
 /* rule 28 can match eol */

@@ -1,7 +1,10 @@
 #ifndef TREENODE_H
 #define TREENODE_H
 
-#include "syntax.tab.h"
+//for strdup bug
+#define _POSIX_C_SOURCE 200809L
+#include "util.h"
+
 struct TreeNode_t
 {
     union {
@@ -9,15 +12,25 @@ struct TreeNode_t
         float float_val;
         char *str_val;
     } value;
-    char *name;
+
+    //if is_token, int = YYTOKENTYPE
+    //if !is_token, int = nonterminal_symbol_t
+    int type;
+
+    bool is_token;
     int num_of_children;
-    struct TreeNode_t *children;
+
+    int first_line;
+
+    //array, children[i] is a pointer to ith-child
+    struct TreeNode_t **children;
 };
 
 typedef struct TreeNode_t TreeNode;
 
-TreeNode *create_node(char *name);
-
+TreeNode *create_token_node(int t_type, int first_line);
+TreeNode *create_nonterminal_node(int n_type, int first_line, int num_of_children, ...);
+// TreeNode *create_error_node(int first_line);
 // TreeNode *create_node(YYTOKENTYPE type);
 
 #endif

@@ -69,6 +69,7 @@
 #line 1 "./syntax.y"
 
     // #define YYDEBUG 1
+    #define YYSTYPE TreeNode* 
     #include "TreeNode.h"
     #include <stdio.h>
     #include "lex.yy.c"
@@ -76,11 +77,20 @@
     int yylex();
     void yyerror(char *s){printf("%s at line %d\n",s,yylineno);}
     int fileno(FILE* stream); 
-    #define YYSTYPE TreeNode* 
+    typedef enum{
+        Program,ExtDefList,ExtDef,ExtDecList,
+        Specifier,StructSpecifier,OptTag,Tag,
+        VarDec,FunDec,VarList,ParamDec,
+        CompSt,StmtList,Stmt,DefList,Def,
+        DecList,Dec,Exp,Args,
+
+        Error
+    }nonterminal_symbol_t;
+    TreeNode* head = NULL;
 
 
 /* Line 268 of yacc.c  */
-#line 84 "./syntax.tab.c"
+#line 94 "./syntax.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -166,7 +176,7 @@ typedef struct YYLTYPE
 
 
 /* Line 343 of yacc.c  */
-#line 170 "./syntax.tab.c"
+#line 180 "./syntax.tab.c"
 
 #ifdef short
 # undef short
@@ -482,13 +492,13 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    50,    50,    52,    53,    55,    56,    57,    59,    60,
-      62,    63,    65,    66,    68,    69,    71,    73,    74,    76,
-      77,    79,    80,    82,    84,    86,    87,    89,    90,    91,
-      92,    93,    94,    95,    97,    98,   100,   102,   103,   105,
-     106,   108,   109,   110,   111,   112,   113,   114,   115,   116,
-     117,   118,   119,   120,   121,   122,   123,   124,   125,   127,
-     128
+       0,    52,    52,    54,    55,    57,    58,    59,    61,    62,
+      64,    65,    67,    68,    70,    71,    73,    75,    76,    78,
+      79,    81,    82,    84,    86,    88,    89,    91,    92,    93,
+      94,    95,    96,    97,    99,   100,   102,   104,   105,   107,
+     108,   110,   111,   112,   113,   114,   115,   116,   117,   118,
+     119,   120,   121,   122,   123,   124,   125,   126,   127,   129,
+     130
 };
 #endif
 
@@ -1560,14 +1570,420 @@ yyreduce:
         case 2:
 
 /* Line 1806 of yacc.c  */
-#line 50 "./syntax.y"
-    { printf("!!![program]!!!\n"); }
+#line 52 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Program,(yyloc).first_line,1,(yyvsp[(1) - (1)]));  head = (yyval);printf("!!![program]!!!\n"); }
+    break;
+
+  case 3:
+
+/* Line 1806 of yacc.c  */
+#line 54 "./syntax.y"
+    {(yyval) = create_nonterminal_node(ExtDefList,(yyloc).first_line,2,(yyvsp[(1) - (2)]),(yyvsp[(2) - (2)]));}
+    break;
+
+  case 4:
+
+/* Line 1806 of yacc.c  */
+#line 55 "./syntax.y"
+    {(yyval) = create_nonterminal_node(ExtDefList,(yyloc).first_line,0);}
+    break;
+
+  case 5:
+
+/* Line 1806 of yacc.c  */
+#line 57 "./syntax.y"
+    {(yyval) = create_nonterminal_node(ExtDef,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 6:
+
+/* Line 1806 of yacc.c  */
+#line 58 "./syntax.y"
+    {(yyval) = create_nonterminal_node(ExtDef,(yyloc).first_line,2,(yyvsp[(1) - (2)]),(yyvsp[(2) - (2)]));}
+    break;
+
+  case 7:
+
+/* Line 1806 of yacc.c  */
+#line 59 "./syntax.y"
+    {(yyval) = create_nonterminal_node(ExtDef,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 8:
+
+/* Line 1806 of yacc.c  */
+#line 61 "./syntax.y"
+    {(yyval) = create_nonterminal_node(ExtDecList,(yyloc).first_line,1,(yyvsp[(1) - (1)]));}
+    break;
+
+  case 9:
+
+/* Line 1806 of yacc.c  */
+#line 62 "./syntax.y"
+    {(yyval) = create_nonterminal_node(ExtDecList,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 10:
+
+/* Line 1806 of yacc.c  */
+#line 64 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Specifier,(yyloc).first_line,1,(yyvsp[(1) - (1)]));}
+    break;
+
+  case 11:
+
+/* Line 1806 of yacc.c  */
+#line 65 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Specifier,(yyloc).first_line,1,(yyvsp[(1) - (1)]));}
+    break;
+
+  case 12:
+
+/* Line 1806 of yacc.c  */
+#line 67 "./syntax.y"
+    {(yyval) = create_nonterminal_node(StructSpecifier,(yyloc).first_line,5,(yyvsp[(1) - (5)]),(yyvsp[(2) - (5)]),(yyvsp[(3) - (5)]),(yyvsp[(4) - (5)]),(yyvsp[(5) - (5)]));}
+    break;
+
+  case 13:
+
+/* Line 1806 of yacc.c  */
+#line 68 "./syntax.y"
+    {(yyval) = create_nonterminal_node(StructSpecifier,(yyloc).first_line,2,(yyvsp[(1) - (2)]),(yyvsp[(2) - (2)]));}
+    break;
+
+  case 14:
+
+/* Line 1806 of yacc.c  */
+#line 70 "./syntax.y"
+    {(yyval) = create_nonterminal_node(OptTag,(yyloc).first_line,1,(yyvsp[(1) - (1)]));}
+    break;
+
+  case 15:
+
+/* Line 1806 of yacc.c  */
+#line 71 "./syntax.y"
+    {(yyval) = create_nonterminal_node(OptTag,(yyloc).first_line,0);}
+    break;
+
+  case 16:
+
+/* Line 1806 of yacc.c  */
+#line 73 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Tag,(yyloc).first_line,1,(yyvsp[(1) - (1)]));}
+    break;
+
+  case 17:
+
+/* Line 1806 of yacc.c  */
+#line 75 "./syntax.y"
+    {(yyval) = create_nonterminal_node(VarDec,(yyloc).first_line,1,(yyvsp[(1) - (1)]));}
+    break;
+
+  case 18:
+
+/* Line 1806 of yacc.c  */
+#line 76 "./syntax.y"
+    {(yyval) = create_nonterminal_node(VarDec,(yyloc).first_line,4,(yyvsp[(1) - (4)]),(yyvsp[(2) - (4)]),(yyvsp[(3) - (4)]),(yyvsp[(4) - (4)]));}
+    break;
+
+  case 19:
+
+/* Line 1806 of yacc.c  */
+#line 78 "./syntax.y"
+    {(yyval) = create_nonterminal_node(FunDec,(yyloc).first_line,4,(yyvsp[(1) - (4)]),(yyvsp[(2) - (4)]),(yyvsp[(3) - (4)]),(yyvsp[(4) - (4)]));}
+    break;
+
+  case 20:
+
+/* Line 1806 of yacc.c  */
+#line 79 "./syntax.y"
+    {(yyval) = create_nonterminal_node(FunDec,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 21:
+
+/* Line 1806 of yacc.c  */
+#line 81 "./syntax.y"
+    {(yyval) = create_nonterminal_node(VarList,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 22:
+
+/* Line 1806 of yacc.c  */
+#line 82 "./syntax.y"
+    {(yyval) = create_nonterminal_node(VarList,(yyloc).first_line,1,(yyvsp[(1) - (1)]));}
+    break;
+
+  case 23:
+
+/* Line 1806 of yacc.c  */
+#line 84 "./syntax.y"
+    {(yyval) = create_nonterminal_node(ParamDec,(yyloc).first_line,2,(yyvsp[(1) - (2)]),(yyvsp[(2) - (2)]));}
+    break;
+
+  case 24:
+
+/* Line 1806 of yacc.c  */
+#line 86 "./syntax.y"
+    {(yyval) = create_nonterminal_node(CompSt,(yyloc).first_line,4,(yyvsp[(1) - (4)]),(yyvsp[(2) - (4)]),(yyvsp[(3) - (4)]),(yyvsp[(4) - (4)]));}
+    break;
+
+  case 25:
+
+/* Line 1806 of yacc.c  */
+#line 88 "./syntax.y"
+    {(yyval) = create_nonterminal_node(StmtList,(yyloc).first_line,2,(yyvsp[(1) - (2)]),(yyvsp[(2) - (2)]));}
+    break;
+
+  case 26:
+
+/* Line 1806 of yacc.c  */
+#line 89 "./syntax.y"
+    {(yyval) = create_nonterminal_node(StmtList,(yyloc).first_line,0);}
+    break;
+
+  case 27:
+
+/* Line 1806 of yacc.c  */
+#line 91 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Stmt,(yyloc).first_line,2,(yyvsp[(1) - (2)]),(yyvsp[(2) - (2)]));}
+    break;
+
+  case 28:
+
+/* Line 1806 of yacc.c  */
+#line 92 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Stmt,(yyloc).first_line,1,(yyvsp[(1) - (1)]));}
+    break;
+
+  case 29:
+
+/* Line 1806 of yacc.c  */
+#line 93 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Stmt,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 30:
+
+/* Line 1806 of yacc.c  */
+#line 94 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Stmt,(yyloc).first_line,5,(yyvsp[(1) - (5)]),(yyvsp[(2) - (5)]),(yyvsp[(3) - (5)]),(yyvsp[(4) - (5)]),(yyvsp[(5) - (5)]));}
+    break;
+
+  case 31:
+
+/* Line 1806 of yacc.c  */
+#line 95 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Stmt,(yyloc).first_line,7,(yyvsp[(1) - (7)]),(yyvsp[(2) - (7)]),(yyvsp[(3) - (7)]),(yyvsp[(4) - (7)]),(yyvsp[(5) - (7)]),(yyvsp[(6) - (7)]),(yyvsp[(7) - (7)]));}
+    break;
+
+  case 32:
+
+/* Line 1806 of yacc.c  */
+#line 96 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Stmt,(yyloc).first_line,5,(yyvsp[(1) - (5)]),(yyvsp[(2) - (5)]),(yyvsp[(3) - (5)]),(yyvsp[(4) - (5)]),(yyvsp[(5) - (5)]));}
+    break;
+
+  case 33:
+
+/* Line 1806 of yacc.c  */
+#line 97 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Stmt,(yyloc).first_line,2,create_nonterminal_node(Error,(yyloc).first_line,0),(yyvsp[(2) - (2)]));}
+    break;
+
+  case 34:
+
+/* Line 1806 of yacc.c  */
+#line 99 "./syntax.y"
+    {(yyval) = create_nonterminal_node(DefList,(yyloc).first_line,2,(yyvsp[(1) - (2)]),(yyvsp[(2) - (2)]));}
+    break;
+
+  case 35:
+
+/* Line 1806 of yacc.c  */
+#line 100 "./syntax.y"
+    {(yyval) = create_nonterminal_node(DefList,(yyloc).first_line,0);}
+    break;
+
+  case 36:
+
+/* Line 1806 of yacc.c  */
+#line 102 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Def,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 37:
+
+/* Line 1806 of yacc.c  */
+#line 104 "./syntax.y"
+    {(yyval) = create_nonterminal_node(DecList,(yyloc).first_line,1,(yyvsp[(1) - (1)]));}
+    break;
+
+  case 38:
+
+/* Line 1806 of yacc.c  */
+#line 105 "./syntax.y"
+    {(yyval) = create_nonterminal_node(DecList,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 39:
+
+/* Line 1806 of yacc.c  */
+#line 107 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Dec,(yyloc).first_line,1,(yyvsp[(1) - (1)]));}
+    break;
+
+  case 40:
+
+/* Line 1806 of yacc.c  */
+#line 108 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Dec,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 41:
+
+/* Line 1806 of yacc.c  */
+#line 110 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 42:
+
+/* Line 1806 of yacc.c  */
+#line 111 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 43:
+
+/* Line 1806 of yacc.c  */
+#line 112 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 44:
+
+/* Line 1806 of yacc.c  */
+#line 113 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 45:
+
+/* Line 1806 of yacc.c  */
+#line 114 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 46:
+
+/* Line 1806 of yacc.c  */
+#line 115 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 47:
+
+/* Line 1806 of yacc.c  */
+#line 116 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 48:
+
+/* Line 1806 of yacc.c  */
+#line 117 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 49:
+
+/* Line 1806 of yacc.c  */
+#line 118 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 50:
+
+/* Line 1806 of yacc.c  */
+#line 119 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,2,(yyvsp[(1) - (2)]),(yyvsp[(2) - (2)]));}
+    break;
+
+  case 51:
+
+/* Line 1806 of yacc.c  */
+#line 120 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,2,(yyvsp[(1) - (2)]),(yyvsp[(2) - (2)]));}
+    break;
+
+  case 52:
+
+/* Line 1806 of yacc.c  */
+#line 121 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,4,(yyvsp[(1) - (4)]),(yyvsp[(2) - (4)]),(yyvsp[(3) - (4)]),(yyvsp[(4) - (4)]));}
+    break;
+
+  case 53:
+
+/* Line 1806 of yacc.c  */
+#line 122 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 54:
+
+/* Line 1806 of yacc.c  */
+#line 123 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,4,(yyvsp[(1) - (4)]),(yyvsp[(2) - (4)]),(yyvsp[(3) - (4)]),(yyvsp[(4) - (4)]));}
+    break;
+
+  case 55:
+
+/* Line 1806 of yacc.c  */
+#line 124 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 56:
+
+/* Line 1806 of yacc.c  */
+#line 125 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,1,(yyvsp[(1) - (1)]));}
+    break;
+
+  case 57:
+
+/* Line 1806 of yacc.c  */
+#line 126 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,1,(yyvsp[(1) - (1)]));}
+    break;
+
+  case 58:
+
+/* Line 1806 of yacc.c  */
+#line 127 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,1,(yyvsp[(1) - (1)]));}
+    break;
+
+  case 59:
+
+/* Line 1806 of yacc.c  */
+#line 129 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Args,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),(yyvsp[(3) - (3)]));}
+    break;
+
+  case 60:
+
+/* Line 1806 of yacc.c  */
+#line 130 "./syntax.y"
+    {(yyval) = create_nonterminal_node(Args,(yyloc).first_line,1,(yyvsp[(1) - (1)]));}
     break;
 
 
 
 /* Line 1806 of yacc.c  */
-#line 1571 "./syntax.tab.c"
+#line 1987 "./syntax.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1805,6 +2221,6 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 130 "./syntax.y"
+#line 132 "./syntax.y"
 
 
