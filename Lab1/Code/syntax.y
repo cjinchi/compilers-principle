@@ -4,20 +4,14 @@
     #include "TreeNode.h"
     #include <stdio.h>
     #include "lex.yy.c"
+    #include "util.h"
     int yylineno;
     int yylex();
-    void yyerror(char *s){printf("%s at line %d\n",s,yylineno);}
+    bool has_error = false;
+    void yyerror(char *s){has_error = true;printf("Error type B at Line %d: %s.\n",yylineno,s);}
     int fileno(FILE* stream); 
-    typedef enum{
-        Program,ExtDefList,ExtDef,ExtDecList,
-        Specifier,StructSpecifier,OptTag,Tag,
-        VarDec,FunDec,VarList,ParamDec,
-        CompSt,StmtList,Stmt,DefList,Def,
-        DecList,Dec,Exp,Args,
-
-        Error
-    }nonterminal_symbol_t;
     TreeNode* head = NULL;
+
 %}
 %locations
 
@@ -49,7 +43,7 @@
 
 
 %%
-Program : ExtDefList {$$ = create_nonterminal_node(Program,@$.first_line,1,$1);  head = $$;printf("!!![program]!!!\n"); }
+Program : ExtDefList {$$ = create_nonterminal_node(Program,@$.first_line,1,$1);  head = $$;if(!has_error)print_tree(head); }
     ;
 ExtDefList : ExtDef ExtDefList {$$ = create_nonterminal_node(ExtDefList,@$.first_line,2,$1,$2);}
     | /* empty */ {$$ = create_nonterminal_node(ExtDefList,@$.first_line,0);}
@@ -94,7 +88,7 @@ Stmt : Exp SEMI {$$ = create_nonterminal_node(Stmt,@$.first_line,2,$1,$2);}
     | IF LP Exp RP Stmt %prec LOWER_THAN_ELSE {$$ = create_nonterminal_node(Stmt,@$.first_line,5,$1,$2,$3,$4,$5);}
     | IF LP Exp RP Stmt ELSE Stmt {$$ = create_nonterminal_node(Stmt,@$.first_line,7,$1,$2,$3,$4,$5,$6,$7);}
     | WHILE LP Exp RP Stmt {$$ = create_nonterminal_node(Stmt,@$.first_line,5,$1,$2,$3,$4,$5);}
-    | error SEMI {$$ = create_nonterminal_node(Stmt,@$.first_line,2,create_nonterminal_node(Error,@$.first_line,0),$2);}
+    | error SEMI {$$ = create_nonterminal_node(Stmt,@$.first_line,2,create_error_node(@$.first_line),$2);}
     ;
 DefList : Def DefList {$$ = create_nonterminal_node(DefList,@$.first_line,2,$1,$2);}
     | /* empty */ {$$ = create_nonterminal_node(DefList,@$.first_line,0);}

@@ -539,7 +539,8 @@ char *yytext;
         yycolumn += yyleng;
 
     #define TOKEN_ASSIGN_YYLVAL(token_type) yylval=create_token_node(token_type,yylineno);
-#line 543 "./lex.yy.c"
+    extern bool has_error;
+#line 544 "./lex.yy.c"
 
 #define INITIAL 0
 
@@ -726,9 +727,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 20 "./lexical.l"
+#line 21 "./lexical.l"
 
-#line 732 "./lex.yy.c"
+#line 733 "./lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -823,162 +824,162 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 21 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(TYPE);return TYPE;}
+#line 22 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(TYPE_T);yylval->value.str_val = strdup(yytext);return TYPE;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 22 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(STRUCT);return STRUCT;}
+#line 23 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(STRUCT_T);return STRUCT;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 23 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(RETURN);return RETURN;}
+#line 24 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(RETURN_T);return RETURN;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 24 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(IF);return IF;}
+#line 25 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(IF_T);return IF;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 25 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(ELSE);return ELSE;}
+#line 26 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(ELSE_T);return ELSE;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 26 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(WHILE);return WHILE;}
+#line 27 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(WHILE_T);return WHILE;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 27 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(LP);return LP;}
+#line 28 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(LP_T);return LP;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 28 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(RP);return RP;}
+#line 29 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(RP_T);return RP;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 29 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(LB);return LB;}
+#line 30 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(LB_T);return LB;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 30 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(RB);return RB;}
+#line 31 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(RB_T);return RB;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 31 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(LC);return LC;}
+#line 32 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(LC_T);return LC;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 32 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(RC);return RC;}
+#line 33 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(RC_T);return RC;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 33 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(SEMI);return SEMI;}
+#line 34 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(SEMI_T);return SEMI;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 34 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(COMMA);return COMMA;}
+#line 35 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(COMMA_T);return COMMA;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 35 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(ASSIGNOP);return ASSIGNOP;}
+#line 36 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(ASSIGNOP_T);return ASSIGNOP;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 36 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(RELOP);yylval->value.str_val = strdup(yytext);return RELOP;}
+#line 37 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(RELOP_T);yylval->value.str_val = strdup(yytext);return RELOP;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 37 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(PLUS);return PLUS;}
+#line 38 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(PLUS_T);return PLUS;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 38 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(MINUS);return MINUS;}
+#line 39 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(MINUS_T);return MINUS;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 39 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(STAR);return STAR;}
+#line 40 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(STAR_T);return STAR;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 40 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(DIV);return DIV;}
+#line 41 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(DIV_T);return DIV;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 41 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(AND);return AND;}
+#line 42 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(AND_T);return AND;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 42 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(OR);return OR;}
+#line 43 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(OR_T);return OR;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 43 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(NOT);return NOT;}
+#line 44 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(NOT_T);return NOT;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 44 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(INT);yylval->value.int_val = atoi(yytext);return INT;}
+#line 45 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(INT_T);yylval->value.int_val = atoi(yytext);return INT;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 45 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(FLOAT);yylval->value.float_val = atof(yytext);return FLOAT;}
+#line 46 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(FLOAT_T);yylval->value.float_val = atof(yytext);return FLOAT;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 46 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(DOT);return DOT;}
+#line 47 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(DOT_T);return DOT;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 47 "./lexical.l"
-{TOKEN_ASSIGN_YYLVAL(ID);yylval->value.str_val = strdup(yytext); return ID;}
+#line 48 "./lexical.l"
+{TOKEN_ASSIGN_YYLVAL(ID_T);yylval->value.str_val = strdup(yytext); return ID;}
 	YY_BREAK
 case 28:
 /* rule 28 can match eol */
 YY_RULE_SETUP
-#line 48 "./lexical.l"
+#line 49 "./lexical.l"
 {yycolumn = 1;}
 	YY_BREAK
 case 29:
 /* rule 29 can match eol */
 YY_RULE_SETUP
-#line 49 "./lexical.l"
+#line 50 "./lexical.l"
 {  }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 50 "./lexical.l"
-{ printf("Error type A at Line %d: Mysterious characters \'%s\'\n",yylineno, yytext); }
+#line 51 "./lexical.l"
+{ printf("Error type A at Line %d: Mysterious characters \'%s\'\n",yylineno, yytext); has_error= true;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 51 "./lexical.l"
+#line 52 "./lexical.l"
 ECHO;
 	YY_BREAK
-#line 982 "./lex.yy.c"
+#line 983 "./lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1988,7 +1989,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 51 "./lexical.l"
+#line 52 "./lexical.l"
 
 
 int main(int argc, char **argv)

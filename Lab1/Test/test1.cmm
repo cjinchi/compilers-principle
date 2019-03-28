@@ -1,5 +1,5 @@
 int main()
 {
-	fes-~;fasf-;fasfasf==;
-    fasdf-;
+	int i = 1;
+	int j = ~i;
 }
