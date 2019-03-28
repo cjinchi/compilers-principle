@@ -69,15 +69,18 @@
 #line 1 "./syntax.y"
 
     // #define YYDEBUG 1
+    #include "TreeNode.h"
     #include <stdio.h>
+    #include "lex.yy.c"
     int yylineno;
     int yylex();
     void yyerror(char *s){printf("%s at line %d\n",s,yylineno);}
     int fileno(FILE* stream); 
+    #define YYSTYPE TreeNode* 
 
 
 /* Line 268 of yacc.c  */
-#line 81 "./syntax.tab.c"
+#line 84 "./syntax.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -139,21 +142,7 @@
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE
-{
-
-/* Line 293 of yacc.c  */
-#line 10 "./syntax.y"
-
-    int int_val;
-    float float_val;
-    char* str_val;
-
-
-
-/* Line 293 of yacc.c  */
-#line 156 "./syntax.tab.c"
-} YYSTYPE;
+typedef int YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -177,7 +166,7 @@ typedef struct YYLTYPE
 
 
 /* Line 343 of yacc.c  */
-#line 181 "./syntax.tab.c"
+#line 170 "./syntax.tab.c"
 
 #ifdef short
 # undef short
@@ -493,13 +482,13 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    44,    44,    46,    47,    49,    50,    51,    53,    54,
-      56,    57,    59,    60,    62,    63,    65,    67,    68,    70,
-      71,    73,    74,    76,    78,    80,    81,    83,    84,    85,
-      86,    87,    88,    89,    91,    92,    94,    96,    97,    99,
-     100,   102,   103,   104,   105,   106,   107,   108,   109,   110,
-     111,   112,   113,   114,   115,   116,   117,   118,   119,   121,
-     122
+       0,    50,    50,    52,    53,    55,    56,    57,    59,    60,
+      62,    63,    65,    66,    68,    69,    71,    73,    74,    76,
+      77,    79,    80,    82,    84,    86,    87,    89,    90,    91,
+      92,    93,    94,    95,    97,    98,   100,   102,   103,   105,
+     106,   108,   109,   110,   111,   112,   113,   114,   115,   116,
+     117,   118,   119,   120,   121,   122,   123,   124,   125,   127,
+     128
 };
 #endif
 
@@ -1571,14 +1560,14 @@ yyreduce:
         case 2:
 
 /* Line 1806 of yacc.c  */
-#line 44 "./syntax.y"
+#line 50 "./syntax.y"
     { printf("!!![program]!!!\n"); }
     break;
 
 
 
 /* Line 1806 of yacc.c  */
-#line 1582 "./syntax.tab.c"
+#line 1571 "./syntax.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1816,6 +1805,6 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 124 "./syntax.y"
+#line 130 "./syntax.y"
 
-#include "lex.yy.c"
+

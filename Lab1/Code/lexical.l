@@ -1,5 +1,8 @@
 %{
+    #define YYSTYPE TreeNode* 
+
     #include "syntax.tab.h"
+    #include "TreeNode.h"
     #include <string.h>
     int yycolumn = 1;
     #define YY_USER_ACTION \
@@ -30,7 +33,7 @@ while {return WHILE;}
 ; {return SEMI;}
 , {return COMMA;}
 = {return ASSIGNOP;}
->|<|(>=)|(<=)|(==)|(!=) {yylval.str_val = strdup(yytext);return RELOP;}
+>|<|(>=)|(<=)|(==)|(!=) {return RELOP;}
 \+ {return PLUS;}
 - {return MINUS;}
 \* {return STAR;}
@@ -38,10 +41,10 @@ while {return WHILE;}
 && {return AND;}
 \|\| {return OR;}
 ! {return NOT;}
-(0)|({positive-digit}{digit}*) { yylval.int_val = atoi(yytext);return INT;}
-({digit}+\.{digit}+)|((({digit}*\.{digit}+)|({digit}+\.{digit}*))(e|E)((\+|-)?)({digit}+)) {yylval.float_val = atof(yytext);return FLOAT;}
+(0)|({positive-digit}{digit}*) {yylval = create_node("INT");yylval->value.int_val = atoi(yytext);return INT;}
+({digit}+\.{digit}+)|((({digit}*\.{digit}+)|({digit}+\.{digit}*))(e|E)((\+|-)?)({digit}+)) {return FLOAT;}
 \. {return DOT;}
-({letterOrUs})({letterOrUs}|{digit})* { yylval.str_val = strdup(yytext);return ID;}
+({letterOrUs})({letterOrUs}|{digit})* { return ID;}
 \n {yycolumn = 1;}
 {delim} {  }
 . { printf("Error type A at Line %d: Mysterious characters \'%s\'\n",yylineno, yytext); }

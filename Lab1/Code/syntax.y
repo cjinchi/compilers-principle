@@ -1,24 +1,30 @@
 %{
     // #define YYDEBUG 1
+    #include "TreeNode.h"
     #include <stdio.h>
+    #include "lex.yy.c"
     int yylineno;
     int yylex();
     void yyerror(char *s){printf("%s at line %d\n",s,yylineno);}
     int fileno(FILE* stream); 
+    
 %}
+// %define api.value.type {TreeNode*}
 %locations
-%union {
-    int int_val;
-    float float_val;
-    char* str_val;
-}
 
-%token <int_val> INT 
-%token <float_val> FLOAT
+// %union {
+//     int int_val;
+//     float float_val;
+//     char* str_val;
+// }
+
+
+%token INT 
+%token FLOAT
 %token SEMI COMMA ASSIGNOP 
-%token <str_val> RELOP
-%token <str_val> ID 
-%token <str_val> TYPE
+%token RELOP
+%token ID 
+%token TYPE
 %token DOT
 %token PLUS MINUS
 %token STAR DIV
@@ -122,4 +128,3 @@ Args : Exp COMMA Args
     | Exp
     ;
 %%
-#include "lex.yy.c"
