@@ -1,9 +1,0 @@
-int main()
-{
-    float a = 0.7;
-float b = 12.43;
-float c = 9.00;
-float d = 01.23E12;
-float e = 43.e-4;
-float f = .5E03;
-}
