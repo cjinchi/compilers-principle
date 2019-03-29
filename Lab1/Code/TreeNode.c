@@ -58,7 +58,7 @@ void print_node(TreeNode *node, int depth)
     }
     for (int i = 0; i < depth; i++)
     {
-        printf("   ");
+        printf("  ");
     }
     printf("%s\n", get_literal(node));
     for (int i = 0; i < node->num_of_children; i++)
