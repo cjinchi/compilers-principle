@@ -1625,21 +1625,21 @@ yyreduce:
 
 /* Line 1806 of yacc.c  */
 #line 54 "./syntax.y"
-    { yyerrok; }
+    { (yyval) = create_nonterminal_node(ExtDef,(yyloc).first_line,2,create_error_node((yyloc).first_line),(yyvsp[(2) - (2)])); yyerrok; }
     break;
 
   case 9:
 
 /* Line 1806 of yacc.c  */
 #line 55 "./syntax.y"
-    {  yyerrok; }
+    { (yyval) = create_nonterminal_node(ExtDef,(yyloc).first_line,2,(yyvsp[(1) - (2)]),create_error_node((yyloc).first_line)); yyerrok; }
     break;
 
   case 10:
 
 /* Line 1806 of yacc.c  */
 #line 56 "./syntax.y"
-    {yyerrok;}
+    { (yyval) = create_nonterminal_node(ExtDef,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),create_error_node((yyloc).first_line)); yyerrok; }
     break;
 
   case 11:
@@ -1660,7 +1660,7 @@ yyreduce:
 
 /* Line 1806 of yacc.c  */
 #line 61 "./syntax.y"
-    {yyerrok;}
+    {(yyval) = create_nonterminal_node(ExtDecList,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),create_error_node((yyloc).first_line));yyerrok;}
     break;
 
   case 14:
@@ -1758,7 +1758,7 @@ yyreduce:
 
 /* Line 1806 of yacc.c  */
 #line 82 "./syntax.y"
-    {yyerrok;}
+    {(yyval) = create_nonterminal_node(VarList,(yyloc).first_line,3,(yyvsp[(1) - (3)]),create_error_node((yyloc).first_line),(yyvsp[(3) - (3)]));yyerrok;}
     break;
 
   case 28:
@@ -1870,7 +1870,7 @@ yyreduce:
 
 /* Line 1806 of yacc.c  */
 #line 104 "./syntax.y"
-    {yyerrok;}
+    {(yyval) = create_nonterminal_node(Def,(yyloc).first_line,3,(yyvsp[(1) - (3)]),create_error_node((yyloc).first_line),(yyvsp[(3) - (3)]));yyerrok;}
     break;
 
   case 44:
@@ -1891,7 +1891,7 @@ yyreduce:
 
 /* Line 1806 of yacc.c  */
 #line 108 "./syntax.y"
-    {yyerrok;}
+    {(yyval) = create_nonterminal_node(DecList,(yyloc).first_line,3,(yyvsp[(1) - (3)]),create_error_node((yyloc).first_line),(yyvsp[(3) - (3)]));yyerrok;}
     break;
 
   case 47:
@@ -1912,7 +1912,7 @@ yyreduce:
 
 /* Line 1806 of yacc.c  */
 #line 112 "./syntax.y"
-    {yyerrok;}
+    {(yyval) = create_nonterminal_node(Dec,(yyloc).first_line,3,(yyvsp[(1) - (3)]),(yyvsp[(2) - (3)]),create_error_node((yyloc).first_line));yyerrok;}
     break;
 
   case 50:
@@ -2045,14 +2045,14 @@ yyreduce:
 
 /* Line 1806 of yacc.c  */
 #line 132 "./syntax.y"
-    {yyerrok;}
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,4,(yyvsp[(1) - (4)]),(yyvsp[(2) - (4)]),create_error_node((yyloc).first_line),(yyvsp[(4) - (4)]));yyerrok;}
     break;
 
   case 69:
 
 /* Line 1806 of yacc.c  */
 #line 133 "./syntax.y"
-    {yyerrok;}
+    {(yyval) = create_nonterminal_node(Exp,(yyloc).first_line,3,(yyvsp[(1) - (3)]),create_error_node((yyloc).first_line),(yyvsp[(3) - (3)]));yyerrok;}
     break;
 
   case 70:
