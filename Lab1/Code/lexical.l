@@ -11,6 +11,7 @@
 
     #define TOKEN_ASSIGN_YYLVAL(token_type) yylval=create_token_node(token_type,yylineno);
     extern bool has_error;
+    extern int yydebug;
 %}
 %option yylineno
 positive-digit [1-9]
@@ -61,7 +62,7 @@ int main(int argc, char **argv)
         return 1;
     }
     yyrestart(f);
-    // yydebug = 1;
+    yydebug = 1;
     yyparse();
     return 0;
 }

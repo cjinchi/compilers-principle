@@ -1,5 +1,5 @@
 %{
-    // #define YYDEBUG 1
+    #define YYDEBUG 1
     #define YYSTYPE TreeNode* 
     #include "TreeNode.h"
     #include <stdio.h>
@@ -78,6 +78,7 @@ VarList : ParamDec COMMA VarList {$$ = create_nonterminal_node(VarList,@$.first_
 ParamDec : Specifier VarDec {$$ = create_nonterminal_node(ParamDec,@$.first_line,2,$1,$2);}
     ;
 CompSt : LC DefList StmtList RC {$$ = create_nonterminal_node(CompSt,@$.first_line,4,$1,$2,$3,$4);}
+    | error RC { {$$ = create_nonterminal_node(CompSt,@$.first_line,2,create_error_node(@$.first_line),$2);yyerrok;}}
     ;
 StmtList : Stmt StmtList {$$ = create_nonterminal_node(StmtList,@$.first_line,2,$1,$2);}
     | /* empty */ {$$ = create_nonterminal_node(StmtList,@$.first_line,0);}
@@ -88,7 +89,7 @@ Stmt : Exp SEMI {$$ = create_nonterminal_node(Stmt,@$.first_line,2,$1,$2);}
     | IF LP Exp RP Stmt %prec LOWER_THAN_ELSE {$$ = create_nonterminal_node(Stmt,@$.first_line,5,$1,$2,$3,$4,$5);}
     | IF LP Exp RP Stmt ELSE Stmt {$$ = create_nonterminal_node(Stmt,@$.first_line,7,$1,$2,$3,$4,$5,$6,$7);}
     | WHILE LP Exp RP Stmt {$$ = create_nonterminal_node(Stmt,@$.first_line,5,$1,$2,$3,$4,$5);}
-    | error SEMI {$$ = create_nonterminal_node(Stmt,@$.first_line,2,create_error_node(@$.first_line),$2);}
+    | error SEMI {$$ = create_nonterminal_node(Stmt,@$.first_line,2,create_error_node(@$.first_line),$2);yyerrok;}
     ;
 DefList : Def DefList {$$ = create_nonterminal_node(DefList,@$.first_line,2,$1,$2);}
     | /* empty */ {$$ = create_nonterminal_node(DefList,@$.first_line,0);}
@@ -119,6 +120,7 @@ Exp : Exp ASSIGNOP Exp {$$ = create_nonterminal_node(Exp,@$.first_line,3,$1,$2,$
     | ID {$$ = create_nonterminal_node(Exp,@$.first_line,1,$1);}
     | INT {$$ = create_nonterminal_node(Exp,@$.first_line,1,$1);}
     | FLOAT {$$ = create_nonterminal_node(Exp,@$.first_line,1,$1);}
+    | error RP {$$ = create_nonterminal_node(Exp,@$.first_line,2,create_error_node(@$.first_line),$2);yyerrok;}
     ;
 Args : Exp COMMA Args {$$ = create_nonterminal_node(Args,@$.first_line,3,$1,$2,$3);} 
     | Exp {$$ = create_nonterminal_node(Args,@$.first_line,1,$1);}
