@@ -1,6 +1,7 @@
 %{
     #include "syntax.tab.h"
     #include "TreeNode.h"
+    #include "util.h"
     #include <string.h>
     int yycolumn = 1;
     #define YY_USER_ACTION \
@@ -53,6 +54,8 @@ while {TOKEN_ASSIGN_YYLVAL(WHILE_T);return WHILE;}
 %%
 int main(int argc, char **argv)
 {
+    setup();
+
     if (argc <= 1)
         return 1;
     FILE *f = fopen(argv[1], "r");

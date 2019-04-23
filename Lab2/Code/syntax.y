@@ -5,6 +5,7 @@
     #include <stdio.h>
     #include "lex.yy.c"
     #include "util.h"
+    #include "analyse_tree.h"
     int yylineno;
     int yylex();
     bool has_error = false;
@@ -43,7 +44,7 @@
 
 
 %%
-Program : ExtDefList {$$ = create_nonterminal_node(Program,@$.first_line,1,$1);  head = $$; }
+Program : ExtDefList {$$ = create_nonterminal_node(Program,@$.first_line,1,$1);  head = $$; analyse_tree(head);}
     ;
 ExtDefList : ExtDef ExtDefList {$$ = create_nonterminal_node(ExtDefList,@$.first_line,2,$1,$2);}
     | /* empty */ {$$ = create_nonterminal_node(ExtDefList,@$.first_line,0);}

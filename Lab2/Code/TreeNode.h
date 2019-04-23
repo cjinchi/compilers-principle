@@ -36,7 +36,7 @@ TreeNode *create_error_node(int first_line);
 void print_tree(TreeNode *head);
 void print_node(TreeNode *node, int depth);
 char *get_literal(TreeNode *node);
-// TreeNode *create_error_node(int first_line);
-// TreeNode *create_node(YYTOKENTYPE type);
+
+bool check_nonterminal_type(TreeNode *node, int type);
 
 #endif

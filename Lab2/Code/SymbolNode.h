@@ -1,0 +1,29 @@
+#ifndef SYMBOL_NODE_H
+#define SYMBOL_NODE_H
+
+#include "type.h"
+
+struct SymbolNode_t
+{
+    //Part one: common
+    char *name;
+    enum
+    {
+        VARIABLE,
+        FUNCTION
+    } kind;
+    Type *type;                //type for variable OR return type for function
+    struct SymbolNode_t *next; //for linked-list
+
+    //Part two: function only
+    int num_of_paras;
+    Type **paras; //array, paras[i] means i-th para
+};
+
+typedef struct SymbolNode_t SymbolNode;
+
+extern SymbolNode *symbol_list;
+
+SymbolNode *look_up_symbol_list(char *name);
+
+#endif

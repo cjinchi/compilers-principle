@@ -56,11 +56,14 @@ void print_node(TreeNode *node, int depth)
             return;
         }
     }
+
+    //main part
     for (int i = 0; i < depth; i++)
     {
         printf("  ");
     }
     printf("%s\n", get_literal(node));
+
     for (int i = 0; i < node->num_of_children; i++)
     {
         print_node(node->children[i], depth + 1);
@@ -236,4 +239,16 @@ char *get_literal(TreeNode *node)
         }
     }
     return buffer;
+}
+
+bool check_nonterminal_type(TreeNode *node, int type)
+{
+    if (node->is_token == false && node->type == type)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }

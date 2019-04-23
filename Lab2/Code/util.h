@@ -65,4 +65,6 @@ typedef enum
     WHILE_T
 } token_symbol_t;
 
+void setup();
+
 #endif
