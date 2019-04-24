@@ -81,4 +81,14 @@ void add_to_function_list(char *name, Type *return_type, FieldList *paras)
         index++;
         paras = paras->next;
     }
+
+    if (symbol_list == NULL)
+    {
+        symbol_list = temp;
+    }
+    else
+    {
+        temp->next = symbol_list;
+        symbol_list = temp;
+    }
 }

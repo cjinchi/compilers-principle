@@ -35,12 +35,15 @@ struct FieldList_
     char *name;      // 域的名字
     Type *type;      // 域的类型
     FieldList *next; // 下一个域
+    bool init;
 };
 
 extern Type *struct_list;
 
 extern Type *TYPE_INT;
 extern Type *TYPE_FLOAT;
+
+extern FieldList *struct_field_list;
 
 Type *get_type_from_specifier(TreeNode *node);
 
@@ -55,5 +58,9 @@ FieldList *get_dec(TreeNode *dec, Type *def_type);
 FieldList *get_var_dec(TreeNode *var_dec, Type *def_type);
 
 FieldList *get_var_list(TreeNode *var_list);
+
+void add_to_struct_field_list(FieldList *p);
+
+FieldList *look_up_struct_field_list(char *name);
 
 #endif

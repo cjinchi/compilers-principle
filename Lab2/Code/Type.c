@@ -10,6 +10,8 @@ Type *struct_list = NULL;
 Type *TYPE_INT = NULL;
 Type *TYPE_FLOAT = NULL;
 
+FieldList *struct_field_list = NULL;
+
 Type *get_type_from_specifier(TreeNode *node)
 {
     assert(node->is_token == false && node->type == Specifier && node->num_of_children == 1);
@@ -63,14 +65,11 @@ Type *get_type_from_specifier(TreeNode *node)
             }
             else if (opt_tag->num_of_children == 1)
             {
-                //with name, so process redefinition checking
-                Type *defined_past = look_up_struct_list(type->u.structure->name);
-                if (defined_past != NULL)
+                //with name, process redefinition check
+                if (look_up_struct_list(opt_tag->children[0]->value.str_val) != NULL || look_up_variable_list(opt_tag->children[0]->value.str_val) != NULL)
                 {
                     //TODOERROR
-
-                    //return the one defined earlier due to error
-                    return defined_past;
+                    printf("error 16\n");
                 }
                 else
                 {
@@ -80,23 +79,32 @@ Type *get_type_from_specifier(TreeNode *node)
             }
 
             TreeNode *def_list = struct_specifier->children[3];
-            FieldList *def_filed_list = get_def_list(def_list);
-            FieldList *p = def_filed_list;
+            FieldList *def_field_list = get_def_list(def_list);
+            FieldList *p = def_field_list;
+
+            struct_field_list = NULL;
+
             while (p != NULL)
             {
-                if (look_up_variable_list(p->name) != NULL)
+                if (look_up_struct_field_list(p->name) != NULL)
                 {
                     //TODOERROR
-                    //It seems that can't happen here
+
+                    printf("[error 15\n");
                 }
                 else
                 {
-                    add_to_variable_list(p->name, p->type);
+                    add_to_struct_field_list(p);
+                }
+
+                if (p->init == true)
+                {
+                    printf("error 15\n");
                 }
                 p = p->next;
             }
 
-            type->u.structure->next = def_filed_list;
+            type->u.structure->next = def_field_list;
 
             return type;
         }
@@ -129,6 +137,7 @@ void add_to_struct_list(Type *type)
     }
     else
     {
+        //the struct should be just created and not traversing, so it's safe to do so
         type->next = struct_list;
         struct_list = type;
     }
@@ -182,11 +191,18 @@ FieldList *get_def_list(TreeNode *def_list)
 FieldList *get_dec(TreeNode *dec, Type *def_type)
 {
     assert(dec != NULL && CHECK_NON_TYPE(dec, Dec));
+    FieldList *ret = get_var_dec(dec->children[0], def_type);
     if (dec->num_of_children == 3)
     {
         //TODO assginop check
+
+        ret->init = true;
     }
-    return get_var_dec(dec->children[0], def_type);
+    else
+    {
+        ret->init = false;
+    }
+    return ret;
 }
 
 FieldList *get_var_dec(TreeNode *var_dec, Type *def_type)
@@ -242,4 +258,34 @@ FieldList *get_var_list(TreeNode *var_list)
     }
 
     return ret;
+}
+
+void add_to_struct_field_list(FieldList *p)
+{
+    FieldList *temp = malloc(sizeof(*temp));
+    memcpy(temp, p, sizeof(*temp));
+
+    if (struct_field_list == NULL)
+    {
+        struct_field_list = temp;
+    }
+    else
+    {
+        temp->next = struct_field_list;
+        struct_field_list = temp;
+    }
+}
+
+FieldList *look_up_struct_field_list(char *name)
+{
+    FieldList *p = struct_field_list;
+    while (p != NULL)
+    {
+        if (strcmp(p->name, name) == 0)
+        {
+            return p;
+        }
+        p = p->next;
+    }
+    return NULL;
 }

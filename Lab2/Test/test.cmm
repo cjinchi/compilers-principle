@@ -1,7 +1,5 @@
-struct i{
-  int b;
-};
 int main()
  {
- int i, j;
+ int i;
+ i[0];
  }
