@@ -37,6 +37,7 @@ Type *get_type_from_specifier(TreeNode *node)
             if (type == NULL)
             {
                 //TODOERROR
+                printf("error 17\n");
 
                 //regard it as basic type int due to error
                 return TYPE_INT;
@@ -141,12 +142,14 @@ FieldList *get_def_list(TreeNode *def_list)
     while (def_list->num_of_children == 2)
     {
         TreeNode *def = def_list->children[0];
+
         Type *def_type = get_type_from_specifier(def->children[0]);
 
-        TreeNode *dec_list = def_list->children[1];
+        TreeNode *dec_list = def->children[1];
         assert(dec_list != NULL);
         while (dec_list->num_of_children == 3 || dec_list->num_of_children == 1)
         {
+
             TreeNode *dec = dec_list->children[0];
 
             FieldList *dec_field = get_dec(dec, def_type);
@@ -159,15 +162,6 @@ FieldList *get_def_list(TreeNode *def_list)
                 dec_field->next = head;
                 head = dec_field;
             }
-            // if (look_up_variable_list(dec_field->name) != NULL)
-            // {
-            //     //TODOERROR
-            // }
-            // else
-            // {
-            //     add_to_variable_list(dec_field->name, dec_field->type);
-
-            // }
 
             if (dec_list->num_of_children == 3)
             {

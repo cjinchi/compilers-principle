@@ -252,3 +252,15 @@ bool check_nonterminal_type(TreeNode *node, int type)
         return false;
     }
 }
+
+bool check_token_type(TreeNode *node, int type)
+{
+    if (node->is_token == true && node->type == type)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}

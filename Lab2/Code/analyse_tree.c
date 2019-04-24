@@ -2,35 +2,41 @@
 #include <assert.h>
 #include "Type.h"
 #include "SymbolNode.h"
+#include "util.h"
 
-void analyse_tree(TreeNode *node)
+void analyse_tree(TreeNode *program)
 {
     //should I check EMPTY node first???
+    printf("analyse begin\n");
 
-    if (node->is_token)
-    {
-        return;
-    }
+    CHECK_NON_TYPE(program, Program);
 
-    switch (node->type)
+    TreeNode *ext_def_list = program->children[0];
+
+    while (ext_def_list->num_of_children == 2)
     {
+        printf("in extdeflist loop\n");
+        TreeNode *node = ext_def_list->children[0];
+        CHECK_NON_TYPE(node, ExtDef);
+
+        printf("in case extdef\n");
         int children_num = node->num_of_children;
         TreeNode **childrens = node->children;
-    case ExtDef:
         assert(children_num > 0 && CHECK_NON_TYPE(childrens[0], Specifier));
         Type *type = get_type_from_specifier(childrens[0]);
 
         if (children_num == 3 && CHECK_NON_TYPE(childrens[1], ExtDecList) && CHECK_NON_TYPE(childrens[2], SEMI_T))
         {
+            //variable definition
             TreeNode *ext_dec_list = childrens[1];
             while (ext_dec_list->num_of_children == 1 || ext_dec_list->num_of_children == 3)
             {
                 TreeNode *var_dec = ext_dec_list->children[0];
 
                 FieldList *temp = get_var_dec(var_dec, type);
-                if (look_up_variable_list(temp->name) != NULL)
+                if (look_up_variable_list(temp->name) != NULL || look_up_struct_list(temp->name) != NULL)
                 {
-                    //TODOERROR
+                    printf("error 3\n");
                 }
                 else
                 {
@@ -38,13 +44,15 @@ void analyse_tree(TreeNode *node)
                 }
             }
         }
-        else if (children_num == 2 && CHECK_NON_TYPE(childrens[1], SEMI_T))
+        else if (children_num == 2 && CHECK_TOKEN_TYPE(childrens[1], SEMI_T))
         {
             //do nothing
             //struct definiton has been checked in get_type_from_specifier
         }
         else if (children_num == 3 && CHECK_NON_TYPE(childrens[1], FunDec) && CHECK_NON_TYPE(childrens[2], CompSt))
         {
+            //func definition
+            printf("in func\n");
             //FuncDec
             TreeNode *fun_dec = childrens[1];
             if (look_up_function_list(fun_dec->children[0]->value.str_val) != NULL)
@@ -82,8 +90,9 @@ void analyse_tree(TreeNode *node)
             FieldList *p = def_field_list;
             while (p != NULL)
             {
-                if (look_up_variable_list(p->name) != NULL)
+                if (look_up_variable_list(p->name) != NULL || look_up_struct_list(p->name) != NULL)
                 {
+                    printf("error 3\n");
                     //TODOERROR
                 }
                 else
@@ -108,9 +117,6 @@ void analyse_tree(TreeNode *node)
             assert(false);
         }
 
-        break;
-
-    default:
-        break;
+        ext_def_list = ext_def_list->children[1];
     }
 }
