@@ -45,8 +45,9 @@ void analyse_tree(TreeNode *node)
         }
         else if (children_num == 3 && CHECK_NON_TYPE(childrens[1], FunDec) && CHECK_NON_TYPE(childrens[2], CompSt))
         {
+            //FuncDec
             TreeNode *fun_dec = childrens[1];
-            if (look_up_function_list(fun_dec->children[0]->value.str_val) != NUll)
+            if (look_up_function_list(fun_dec->children[0]->value.str_val) != NULL)
             {
                 //TODOERROR
             }
@@ -62,9 +63,44 @@ void analyse_tree(TreeNode *node)
                 //TODO:mark as boundary here
                 while (var_list != NULL)
                 {
-                    //TODO look up list first
-                    add_to_variable_list(var_list->name, var_list->type);
+                    if (look_up_variable_list(var_list->name) != NULL)
+                    {
+                        //TODOERROR
+                    }
+                    else
+                    {
+                        add_to_variable_list(var_list->name, var_list->type);
+                    }
                 }
+            }
+
+            //- CompSt
+            TreeNode *comp_st = childrens[2];
+            //-- DefList -
+            TreeNode *def_list = comp_st->children[1];
+            FieldList *def_field_list = get_def_list(def_list);
+            FieldList *p = def_field_list;
+            while (p != NULL)
+            {
+                if (look_up_variable_list(p->name) != NULL)
+                {
+                    //TODOERROR
+                }
+                else
+                {
+                    add_to_variable_list(p->name, p->type);
+                }
+                p = p->next;
+            }
+            //-- StmtList
+            TreeNode *stmt_list = comp_st->children[2];
+            while (stmt_list->num_of_children == 2)
+            {
+                TreeNode *stmt = stmt_list->children[0];
+
+                //TODO check stmt here
+
+                stmt_list = stmt_list->children[1];
             }
         }
         else

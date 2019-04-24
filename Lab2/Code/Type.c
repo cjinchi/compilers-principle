@@ -79,7 +79,23 @@ Type *get_type_from_specifier(TreeNode *node)
             }
 
             TreeNode *def_list = struct_specifier->children[3];
-            type->u.structure->next = get_def_list(def_list);
+            FieldList *def_filed_list = get_def_list(def_list);
+            FieldList *p = def_filed_list;
+            while (p != NULL)
+            {
+                if (look_up_variable_list(p->name) != NULL)
+                {
+                    //TODOERROR
+                    //It seems that can't happen here
+                }
+                else
+                {
+                    add_to_variable_list(p->name, p->type);
+                }
+                p = p->next;
+            }
+
+            type->u.structure->next = def_filed_list;
 
             return type;
         }
@@ -134,23 +150,24 @@ FieldList *get_def_list(TreeNode *def_list)
             TreeNode *dec = dec_list->children[0];
 
             FieldList *dec_field = get_dec(dec, def_type);
-            if (look_up_variable_list(dec_field->name) != NULL)
+            if (head == NULL)
             {
-                //TODOERROR
+                head = dec_field;
             }
             else
             {
-                add_to_variable_list(dec_field->name, dec_field->type);
-                if (head == NULL)
-                {
-                    head = dec_field;
-                }
-                else
-                {
-                    dec_field->next = head;
-                    head = dec_field;
-                }
+                dec_field->next = head;
+                head = dec_field;
             }
+            // if (look_up_variable_list(dec_field->name) != NULL)
+            // {
+            //     //TODOERROR
+            // }
+            // else
+            // {
+            //     add_to_variable_list(dec_field->name, dec_field->type);
+
+            // }
 
             if (dec_list->num_of_children == 3)
             {
