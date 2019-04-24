@@ -24,6 +24,12 @@ typedef struct SymbolNode_t SymbolNode;
 
 extern SymbolNode *symbol_list;
 
-SymbolNode *look_up_symbol_list(char *name);
+SymbolNode *look_up_variable_list(char *name);
+
+void add_to_variable_list(char *name, Type *type);
+
+SymbolNode *look_up_function_list(char *name);
+
+void add_to_function_list(char *name, Type *return_type, FieldList *paras);
 
 #endif

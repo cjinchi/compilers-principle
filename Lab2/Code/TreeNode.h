@@ -39,4 +39,6 @@ char *get_literal(TreeNode *node);
 
 bool check_nonterminal_type(TreeNode *node, int type);
 
+#define CHECK_NON_TYPE(node, type) (check_nonterminal_type(node, type) == true)
+
 #endif

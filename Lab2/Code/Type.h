@@ -44,4 +44,16 @@ extern Type *TYPE_FLOAT;
 
 Type *get_type_from_specifier(TreeNode *node);
 
+Type *look_up_struct_list(char *name);
+
+void add_to_struct_list(Type *type);
+
+FieldList *get_def_list(TreeNode *def_list);
+
+FieldList *get_dec(TreeNode *dec, Type *def_type);
+
+FieldList *get_var_dec(TreeNode *var_dec, Type *def_type);
+
+FieldList *get_var_list(TreeNode *var_list);
+
 #endif
