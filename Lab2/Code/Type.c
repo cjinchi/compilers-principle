@@ -30,6 +30,7 @@ Type *get_type_from_specifier(TreeNode *node)
     //Struct type
     else if (node->children[0]->type == StructSpecifier)
     {
+
         TreeNode *struct_specifier = node->children[0];
         //Struct Tag (it was defined and reused here)
         if (struct_specifier->num_of_children == 2 && CHECK_NON_TYPE(struct_specifier->children[1], Tag))
@@ -39,7 +40,7 @@ Type *get_type_from_specifier(TreeNode *node)
             if (type == NULL)
             {
                 //TODOERROR
-                printf("error 17\n");
+                printf("error 17 at %d\n", struct_specifier->children[1]->first_line);
 
                 //regard it as basic type int due to error
                 return TYPE_INT;
@@ -69,7 +70,7 @@ Type *get_type_from_specifier(TreeNode *node)
                 if (look_up_struct_list(opt_tag->children[0]->value.str_val) != NULL || look_up_variable_list(opt_tag->children[0]->value.str_val) != NULL)
                 {
                     //TODOERROR
-                    printf("error 16\n");
+                    printf("error 16 at %d\n", opt_tag->first_line);
                 }
                 else
                 {
@@ -90,7 +91,7 @@ Type *get_type_from_specifier(TreeNode *node)
                 {
                     //TODOERROR
 
-                    printf("[error 15\n");
+                    printf("[error 15 %s\n", p->name);
                 }
                 else
                 {
@@ -264,6 +265,7 @@ void add_to_struct_field_list(FieldList *p)
 {
     FieldList *temp = malloc(sizeof(*temp));
     memcpy(temp, p, sizeof(*temp));
+    temp->next = NULL;
 
     if (struct_field_list == NULL)
     {

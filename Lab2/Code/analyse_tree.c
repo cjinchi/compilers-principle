@@ -7,7 +7,6 @@
 void analyse_program(TreeNode *program)
 {
     //should I check EMPTY node first???
-    printf("analyse begin\n");
 
     CHECK_NON_TYPE(program, Program);
 
@@ -15,11 +14,9 @@ void analyse_program(TreeNode *program)
 
     while (ext_def_list->num_of_children == 2)
     {
-        printf("in extdeflist loop\n");
         TreeNode *node = ext_def_list->children[0];
         CHECK_NON_TYPE(node, ExtDef);
 
-        printf("in case extdef\n");
         int children_num = node->num_of_children;
         TreeNode **childrens = node->children;
 
@@ -62,7 +59,6 @@ void analyse_program(TreeNode *program)
         else if (children_num == 3 && CHECK_NON_TYPE(childrens[1], FunDec) && CHECK_NON_TYPE(childrens[2], CompSt))
         {
             //func definition
-            printf("in func\n");
             //FuncDec
             TreeNode *fun_dec = childrens[1];
             if (look_up_function_list(fun_dec->children[0]->value.str_val) != NULL)
@@ -79,7 +75,6 @@ void analyse_program(TreeNode *program)
                 }
                 add_to_function_list(fun_dec->children[0]->value.str_val, type, var_list);
 
-                printf("goto loop var list\n");
                 //TODO:mark as boundary here
                 while (var_list != NULL)
                 {
@@ -96,7 +91,6 @@ void analyse_program(TreeNode *program)
                 }
             }
 
-            printf("goto comp st\n");
             //dont't mark boundary here
             analyse_comp_st(childrens[2], type);
         }
@@ -158,77 +152,122 @@ Type *analyse_exp(TreeNode *exp)
         else
         {
             printf("error 6\n");
+            return NULL;
         }
 
-        if (analyse_exp(exp->children[0]) != analyse_exp(exp->children[2]))
+        Type *temp1 = analyse_exp(exp->children[0]);
+        Type *temp2 = analyse_exp(exp->children[2]);
+        if (temp1 != NULL && temp2 != NULL && temp1 != temp2)
         {
             printf("error 5\n");
+            return NULL;
         }
-        return analyse_exp(exp->children[0]);
+        return temp1;
     }
     else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[1], AND_T))
     {
         assert(CHECK_NON_TYPE(exp->children[0], Exp));
-        if (analyse_exp(exp->children[0]) != TYPE_INT || analyse_exp(exp->children[2]) != TYPE_INT)
+        Type *one = analyse_exp(exp->children[0]);
+        Type *two = analyse_exp(exp->children[2]);
+        if (one == NULL || two == NULL)
+        {
+            return NULL;
+        }
+        if (one != TYPE_INT || two != TYPE_INT)
         {
             printf("error 7\n");
         }
-        return analyse_exp(exp->children[0]);
+        return one;
     }
     else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[1], OR_T))
     {
         assert(CHECK_NON_TYPE(exp->children[0], Exp));
-        if (analyse_exp(exp->children[0]) != TYPE_INT || analyse_exp(exp->children[2]) != TYPE_INT)
+        Type *one = analyse_exp(exp->children[0]);
+        Type *two = analyse_exp(exp->children[2]);
+        if (one == NULL || two == NULL)
+        {
+            return NULL;
+        }
+        if (one != TYPE_INT || two != TYPE_INT)
         {
             printf("error 7\n");
         }
-        return analyse_exp(exp->children[0]);
+        return one;
     }
     else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[1], RELOP_T))
     {
         assert(CHECK_NON_TYPE(exp->children[0], Exp));
-        if (analyse_exp(exp->children[0]) != TYPE_INT || analyse_exp(exp->children[2]) != TYPE_INT)
+        Type *one = analyse_exp(exp->children[0]);
+        Type *two = analyse_exp(exp->children[2]);
+        if (one == NULL || two == NULL)
+        {
+            return NULL;
+        }
+        if (one != TYPE_INT || two != TYPE_INT)
         {
             printf("error 7\n");
         }
-        return analyse_exp(exp->children[0]);
+        return one;
     }
     else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[1], PLUS_T))
     {
         assert(CHECK_NON_TYPE(exp->children[0], Exp));
-        if ((analyse_exp(exp->children[0]) != analyse_exp(exp->children[2])) || (analyse_exp(exp->children[0]) != TYPE_INT && analyse_exp(exp->children[0]) != TYPE_FLOAT))
+        Type *one = analyse_exp(exp->children[0]);
+        Type *two = analyse_exp(exp->children[2]);
+        if (one == NULL || two == NULL)
+        {
+            return NULL;
+        }
+        if ((one != two) || (one != TYPE_INT && one != TYPE_FLOAT))
         {
             printf("error 7\n");
         }
-        return analyse_exp(exp->children[0]);
+        return one;
     }
     else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[1], MINUS_T))
     {
         assert(CHECK_NON_TYPE(exp->children[0], Exp));
-
-        if ((analyse_exp(exp->children[0]) != analyse_exp(exp->children[2])) || (analyse_exp(exp->children[0]) != TYPE_INT && analyse_exp(exp->children[0]) != TYPE_FLOAT))
+        Type *one = analyse_exp(exp->children[0]);
+        Type *two = analyse_exp(exp->children[2]);
+        if (one == NULL || two == NULL)
+        {
+            return NULL;
+        }
+        if ((one != two) || (one != TYPE_INT && one != TYPE_FLOAT))
         {
             printf("error 7\n");
         }
-        return analyse_exp(exp->children[0]);
+        return one;
     }
     else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[1], STAR_T))
     {
         assert(CHECK_NON_TYPE(exp->children[0], Exp));
-        if ((analyse_exp(exp->children[0]) != analyse_exp(exp->children[2])) || (analyse_exp(exp->children[0]) != TYPE_INT && analyse_exp(exp->children[0]) != TYPE_FLOAT))
+        Type *one = analyse_exp(exp->children[0]);
+        Type *two = analyse_exp(exp->children[2]);
+        if (one == NULL || two == NULL)
+        {
+            return NULL;
+        }
+        if ((one != two) || (one != TYPE_INT && one != TYPE_FLOAT))
         {
             printf("error 7\n");
         }
-        return analyse_exp(exp->children[0]);
+        return one;
     }
     else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[1], DIV_T))
     {
         assert(CHECK_NON_TYPE(exp->children[0], Exp));
-        if ((analyse_exp(exp->children[0]) != analyse_exp(exp->children[2])) || (analyse_exp(exp->children[0]) != TYPE_INT && analyse_exp(exp->children[0]) != TYPE_FLOAT))
+        Type *one = analyse_exp(exp->children[0]);
+        Type *two = analyse_exp(exp->children[2]);
+        if (one == NULL || two == NULL)
+        {
+            return NULL;
+        }
+        if ((one != two) || (one != TYPE_INT && one != TYPE_FLOAT))
         {
             printf("error 7\n");
         }
-        return analyse_exp(exp->children[0]);
+        return one;
     }
     else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[0], LP_T) && CHECK_TOKEN_TYPE(exp->children[2], RP_T))
     {
@@ -238,21 +277,33 @@ Type *analyse_exp(TreeNode *exp)
     else if (exp->num_of_children == 2 && CHECK_TOKEN_TYPE(exp->children[0], MINUS_T))
     {
         assert(CHECK_NON_TYPE(exp->children[1], Exp));
-        if (analyse_exp(exp->children[1]) != TYPE_INT && analyse_exp(exp->children[1]) != TYPE_FLOAT)
+
+        Type *one = analyse_exp(exp->children[1]);
+        if (one == NULL)
+        {
+            return NULL;
+        }
+
+        if (one != TYPE_INT && one != TYPE_FLOAT)
         {
             printf("error 7\n");
         }
 
-        return analyse_exp(exp->children[1]);
+        return one;
     }
     else if (exp->num_of_children == 2 && CHECK_TOKEN_TYPE(exp->children[0], NOT_T))
     {
         assert(CHECK_NON_TYPE(exp->children[1], Exp));
-        if (analyse_exp(exp->children[1]) != TYPE_INT)
+        Type *one = analyse_exp(exp->children[1]);
+        if (one == NULL)
+        {
+            return NULL;
+        }
+        if (one != TYPE_INT)
         {
             printf("error 7\n");
         }
-        return analyse_exp(exp->children[1]);
+        return one;
     }
     else if (exp->num_of_children == 4 && CHECK_TOKEN_TYPE(exp->children[0], ID_T) && CHECK_TOKEN_TYPE(exp->children[1], LP_T) && CHECK_NON_TYPE(exp->children[2], Args) && CHECK_TOKEN_TYPE(exp->children[3], RP_T))
     {
@@ -278,7 +329,6 @@ Type *analyse_exp(TreeNode *exp)
         TreeNode *args = exp->children[2];
         for (int i = 0; i < temp->num_of_paras; i++)
         {
-            printf("in loop\n");
             if (args == NULL || temp->paras[i] != analyse_exp(args->children[0]))
             {
                 mis_match = true;
@@ -352,6 +402,7 @@ Type *analyse_exp(TreeNode *exp)
     }
     else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[1], DOT_T))
     {
+
         assert(CHECK_NON_TYPE(exp->children[0], Exp));
         assert(CHECK_TOKEN_TYPE(exp->children[2], ID_T));
 
@@ -364,6 +415,7 @@ Type *analyse_exp(TreeNode *exp)
         }
 
         FieldList *struct_fields = temp->u.structure;
+
         while (struct_fields != NULL)
         {
             if (strcmp(struct_fields->name, exp->children[2]->value.str_val) == 0)
@@ -383,7 +435,7 @@ Type *analyse_exp(TreeNode *exp)
         SymbolNode *temp = look_up_variable_list(exp->children[0]->value.str_val);
         if (temp == NULL)
         {
-            printf("error 1\n");
+            printf("error 1 \n", exp->children[0]->value.str_val);
             return NULL;
         }
         // todo check
@@ -416,12 +468,34 @@ void analyse_stmt(TreeNode *stmt, Type *return_type)
     }
     else if (stmt->num_of_children == 3 && CHECK_TOKEN_TYPE(stmt->children[0], RETURN_T) && CHECK_NON_TYPE(stmt->children[1], Exp) && CHECK_TOKEN_TYPE(stmt->children[2], SEMI_T))
     {
-        printf("check return\n");
         Type *type = analyse_exp(stmt->children[1]);
         if (type != return_type)
         {
             printf("error 8\n");
         }
+    }
+    else if (stmt->num_of_children == 5 && CHECK_TOKEN_TYPE(stmt->children[0], IF_T))
+    {
+        assert(CHECK_NON_TYPE(stmt->children[2], Exp));
+        assert(CHECK_NON_TYPE(stmt->children[4], Stmt));
+        analyse_exp(stmt->children[2]);
+        analyse_stmt(stmt->children[4], return_type);
+    }
+    else if (stmt->num_of_children == 7 && CHECK_TOKEN_TYPE(stmt->children[0], IF_T))
+    {
+        assert(CHECK_NON_TYPE(stmt->children[2], Exp));
+        assert(CHECK_NON_TYPE(stmt->children[4], Stmt));
+        assert(CHECK_NON_TYPE(stmt->children[6], Stmt));
+        analyse_exp(stmt->children[2]);
+        analyse_stmt(stmt->children[4], return_type);
+        analyse_stmt(stmt->children[6], return_type);
+    }
+    else if (stmt->num_of_children == 5 && CHECK_TOKEN_TYPE(stmt->children[0], WHILE_T))
+    {
+        assert(CHECK_NON_TYPE(stmt->children[2], Exp));
+        assert(CHECK_NON_TYPE(stmt->children[4], Stmt));
+        analyse_exp(stmt->children[2]);
+        analyse_stmt(stmt->children[4], return_type);
     }
     else
     {
