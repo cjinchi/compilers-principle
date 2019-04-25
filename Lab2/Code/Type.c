@@ -60,7 +60,7 @@ Type *get_type_from_specifier(TreeNode *node)
             type->u.structure->next = NULL;
             if (opt_tag->num_of_children == 0)
             {
-                //no name,unnecessary to check and record
+                //no name,unnecessary to check
                 type->u.structure->name = NULL;
             }
             else if (opt_tag->num_of_children == 1)
