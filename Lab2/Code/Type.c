@@ -1,5 +1,5 @@
 #include "Type.h"
-#include <assert.h>
+#include "util.h"
 #include <string.h>
 #include <stdlib.h>
 #include "SymbolNode.h"
@@ -39,9 +39,7 @@ Type *get_type_from_specifier(TreeNode *node)
             Type *type = look_up_struct_list(tag_name);
             if (type == NULL)
             {
-                //TODOERROR
-                printf("error 17 at %d\n", struct_specifier->children[1]->first_line);
-
+                print_semantic_error(17, struct_specifier->children[1]->first_line);
                 //regard it as basic type int due to error
                 return TYPE_INT;
             }
@@ -50,6 +48,7 @@ Type *get_type_from_specifier(TreeNode *node)
                 return type;
             }
         }
+
         //Stuct OptTag { ... } (it's defined here)
         else if (struct_specifier->num_of_children == 5 && CHECK_NON_TYPE(struct_specifier->children[1], OptTag))
         {
@@ -69,8 +68,7 @@ Type *get_type_from_specifier(TreeNode *node)
                 //with name, process redefinition check
                 if (look_up_struct_list(opt_tag->children[0]->value.str_val) != NULL || look_up_variable_list(opt_tag->children[0]->value.str_val, true) != NULL)
                 {
-                    //TODOERROR
-                    printf("error 16 at %d\n", opt_tag->first_line);
+                    print_semantic_error(16, opt_tag->first_line);
                 }
                 else
                 {
@@ -89,9 +87,7 @@ Type *get_type_from_specifier(TreeNode *node)
             {
                 if (look_up_struct_field_list(p->name) != NULL)
                 {
-                    //TODOERROR
-
-                    printf("[error 15 at %d\n", p->first_line);
+                    print_semantic_error(15, p->first_line);
                 }
                 else
                 {
@@ -100,7 +96,7 @@ Type *get_type_from_specifier(TreeNode *node)
 
                 if (p->init == true)
                 {
-                    printf("error 15 at %d\n", p->first_line);
+                    print_semantic_error(15, p->first_line);
                 }
                 p = p->next;
             }

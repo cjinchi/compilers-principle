@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
-#include <assert.h>
 #include <stdio.h>
+#include "util.h"
+
 TreeNode *create_token_node(int t_type, int first_line)
 {
     TreeNode *node = malloc(sizeof(*node));

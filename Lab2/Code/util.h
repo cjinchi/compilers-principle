@@ -1,6 +1,8 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#include <assert.h>
+
 typedef enum
 {
     false,
@@ -66,5 +68,7 @@ typedef enum
 } token_symbol_t;
 
 void setup();
+
+void print_semantic_error(int error_id, int line_num);
 
 #endif

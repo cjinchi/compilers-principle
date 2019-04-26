@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include <assert.h>
+#include "util.h"
 
 SymbolNode *symbol_list = NULL;
 

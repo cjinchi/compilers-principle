@@ -12,3 +12,8 @@ void setup()
     TYPE_FLOAT->kind = BASIC;
     TYPE_FLOAT->u.basic = 1;
 }
+
+void print_semantic_error(int error_id, int line_num)
+{
+    printf("Error type %d at Line %d: Semantic error.\n", error_id, line_num);
+}
