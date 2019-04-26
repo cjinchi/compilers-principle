@@ -35,7 +35,7 @@ struct FieldList_
     char *name;      // 域的名字
     Type *type;      // 域的类型
     FieldList *next; // 下一个域
-    bool init;
+    TreeNode *assigned_with;
     int first_line;
 };
 
@@ -63,5 +63,7 @@ FieldList *get_var_list(TreeNode *var_list);
 void add_to_struct_field_list(FieldList *p);
 
 FieldList *look_up_struct_field_list(char *name);
+
+bool type_equal(Type *type1, Type *type2);
 
 #endif

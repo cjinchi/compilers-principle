@@ -1,16 +1,10 @@
-struct Type{
-     int name;
- int operator;
- };
- struct {
- struct Type a;
- int b;
- } v;
-  int test_function()
+struct Position
  {
- int temp = 2;
- v.a.name = temp + v.b;
- v.a.operator = temp;
- v.b.name = v.b * v.b;
- return v.b;
-}
+ float x, y;
+ };
+
+ int main()
+ {
+ int i;
+ i.x;
+ }

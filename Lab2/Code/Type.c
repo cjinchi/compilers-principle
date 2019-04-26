@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "SymbolNode.h"
 #include "TreeNode.h"
+#include "analyse_tree.h"
 
 Type *struct_list = NULL;
 
@@ -94,7 +95,7 @@ Type *get_type_from_specifier(TreeNode *node)
                     add_to_struct_field_list(p);
                 }
 
-                if (p->init == true)
+                if (p->assigned_with != NULL)
                 {
                     print_semantic_error(15, p->first_line);
                 }
@@ -193,13 +194,11 @@ FieldList *get_dec(TreeNode *dec, Type *def_type)
     FieldList *ret = get_var_dec(dec->children[0], def_type);
     if (dec->num_of_children == 3)
     {
-        //TODO assginop check
-
-        ret->init = true;
+        ret->assigned_with = dec->children[2];
     }
     else
     {
-        ret->init = false;
+        ret->assigned_with = NULL;
     }
     return ret;
 }
@@ -289,4 +288,24 @@ FieldList *look_up_struct_field_list(char *name)
         p = p->next;
     }
     return NULL;
+}
+
+bool type_equal(Type *type1, Type *type2)
+{
+    if (type1 == type2)
+    {
+        return true;
+    }
+    else if (type1 == NULL || type2 == NULL)
+    {
+        return false;
+    }
+    else if (type1->kind == ARRAY && type2->kind == ARRAY)
+    {
+        return type_equal(type1->u.array.elem, type2->u.array.elem);
+    }
+    else
+    {
+        return false;
+    }
 }

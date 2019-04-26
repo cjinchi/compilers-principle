@@ -68,6 +68,15 @@ void analyse_comp_st(TreeNode *comp_st, Type *return_type)
     FieldList *p = def_field_list;
     while (p != NULL)
     {
+        //has assigned
+        if (p->assigned_with != NULL)
+        {
+            if (type_equal(p->type, analyse_exp(p->assigned_with)) == false)
+            {
+                print_semantic_error(5, p->first_line);
+            }
+        }
+
         //check if var name used
         if (look_up_variable_list(p->name, true) != NULL || look_up_struct_list(p->name) != NULL)
         {
@@ -75,6 +84,7 @@ void analyse_comp_st(TreeNode *comp_st, Type *return_type)
         }
         else
         {
+            // printf("addd %s to list\n", p->name);
             add_to_variable_list(p->name, p->type);
         }
         p = p->next;
@@ -256,26 +266,6 @@ void analyse_stmt(TreeNode *stmt, Type *return_type)
     else
     {
         assert(false);
-    }
-}
-
-bool type_equal(Type *type1, Type *type2)
-{
-    if (type1 == type2)
-    {
-        return true;
-    }
-    else if (type1 == NULL || type2 == NULL)
-    {
-        return false;
-    }
-    else if (type1->kind == ARRAY && type2->kind == ARRAY)
-    {
-        return type_equal(type1->u.array.elem, type2->u.array.elem);
-    }
-    else
-    {
-        return false;
     }
 }
 
