@@ -32,9 +32,9 @@ void analyse_program(TreeNode *program)
                 TreeNode *var_dec = ext_dec_list->children[0];
 
                 FieldList *temp = get_var_dec(var_dec, type);
-                if (look_up_variable_list(temp->name) != NULL || look_up_struct_list(temp->name) != NULL)
+                if (look_up_variable_list(temp->name, true) != NULL || look_up_struct_list(temp->name) != NULL)
                 {
-                    printf("error 3\n");
+                    printf("error 3 at %d\n", temp->first_line);
                 }
                 else
                 {
@@ -61,38 +61,42 @@ void analyse_program(TreeNode *program)
             //func definition
             //FuncDec
             TreeNode *fun_dec = childrens[1];
+
+            FieldList *var_list = NULL;
+            if (fun_dec->num_of_children == 4) //has varlist
+            {
+                var_list = get_var_list(fun_dec->children[2]);
+            }
+
             if (look_up_function_list(fun_dec->children[0]->value.str_val) != NULL)
             {
                 //TODOERROR
-                printf("error 4\n");
+                printf("error 4 at %d\n", fun_dec->children[0]->first_line);
             }
             else
             {
-                FieldList *var_list = NULL;
-                if (fun_dec->num_of_children == 4) //has varlist
-                {
-                    var_list = get_var_list(fun_dec->children[2]);
-                }
                 add_to_function_list(fun_dec->children[0]->value.str_val, type, var_list);
+            }
 
-                //TODO:mark as boundary here
-                while (var_list != NULL)
+            add_boundary_to_symbol_list();
+
+            while (var_list != NULL)
+            {
+                if (look_up_variable_list(var_list->name, true) != NULL || look_up_struct_list(var_list->name) != NULL)
                 {
-                    if (look_up_variable_list(var_list->name) != NULL)
-                    {
-                        //TODOERROR
-                    }
-                    else
-                    {
-                        add_to_variable_list(var_list->name, var_list->type);
-                    }
-
-                    var_list = var_list->next;
+                    printf("error 3 at %d\n", var_list->first_line);
                 }
+                else
+                {
+                    add_to_variable_list(var_list->name, var_list->type);
+                }
+
+                var_list = var_list->next;
             }
 
             //dont't mark boundary here
             analyse_comp_st(childrens[2], type);
+            remove_scope_from_symbol_list();
         }
         else
         {
@@ -112,9 +116,9 @@ void analyse_comp_st(TreeNode *comp_st, Type *return_type)
     FieldList *p = def_field_list;
     while (p != NULL)
     {
-        if (look_up_variable_list(p->name) != NULL || look_up_struct_list(p->name) != NULL)
+        if (look_up_variable_list(p->name, true) != NULL || look_up_struct_list(p->name) != NULL)
         {
-            printf("error 3\n");
+            printf("error 3 at %d\n", p->first_line);
             //TODOERROR
         }
         else
@@ -151,15 +155,15 @@ Type *analyse_exp(TreeNode *exp)
         }
         else
         {
-            printf("error 6\n");
+            printf("error 6 at %d\n", exp->children[1]->first_line);
             return NULL;
         }
 
         Type *temp1 = analyse_exp(exp->children[0]);
         Type *temp2 = analyse_exp(exp->children[2]);
-        if (temp1 != NULL && temp2 != NULL && temp1 != temp2)
+        if (temp1 != NULL && temp2 != NULL && !type_equal(temp1, temp2))
         {
-            printf("error 5\n");
+            printf("error 5 at %d\n", exp->children[1]->first_line);
             return NULL;
         }
         return temp1;
@@ -175,7 +179,8 @@ Type *analyse_exp(TreeNode *exp)
         }
         if (one != TYPE_INT || two != TYPE_INT)
         {
-            printf("error 7\n");
+            printf("error 7 at %d\n", exp->children[1]->first_line);
+            return NULL;
         }
         return one;
     }
@@ -190,7 +195,8 @@ Type *analyse_exp(TreeNode *exp)
         }
         if (one != TYPE_INT || two != TYPE_INT)
         {
-            printf("error 7\n");
+            printf("error 7 at %d\n", exp->children[1]->first_line);
+            return NULL;
         }
         return one;
     }
@@ -205,7 +211,8 @@ Type *analyse_exp(TreeNode *exp)
         }
         if (one != TYPE_INT || two != TYPE_INT)
         {
-            printf("error 7\n");
+            printf("error 7 at %d\n", exp->children[1]->first_line);
+            return NULL;
         }
         return one;
     }
@@ -220,7 +227,8 @@ Type *analyse_exp(TreeNode *exp)
         }
         if ((one != two) || (one != TYPE_INT && one != TYPE_FLOAT))
         {
-            printf("error 7\n");
+            printf("error 7 at %d\n", exp->children[1]->first_line);
+            return NULL;
         }
         return one;
     }
@@ -235,7 +243,8 @@ Type *analyse_exp(TreeNode *exp)
         }
         if ((one != two) || (one != TYPE_INT && one != TYPE_FLOAT))
         {
-            printf("error 7\n");
+            printf("error 7 at %d\n", exp->children[1]->first_line);
+            return NULL;
         }
         return one;
     }
@@ -250,7 +259,8 @@ Type *analyse_exp(TreeNode *exp)
         }
         if ((one != two) || (one != TYPE_INT && one != TYPE_FLOAT))
         {
-            printf("error 7\n");
+            printf("error 7 at %d\n", exp->children[1]->first_line);
+            return NULL;
         }
         return one;
     }
@@ -265,7 +275,8 @@ Type *analyse_exp(TreeNode *exp)
         }
         if ((one != two) || (one != TYPE_INT && one != TYPE_FLOAT))
         {
-            printf("error 7\n");
+            printf("error 7 at %d\n", exp->children[1]->first_line);
+            return NULL;
         }
         return one;
     }
@@ -286,7 +297,8 @@ Type *analyse_exp(TreeNode *exp)
 
         if (one != TYPE_INT && one != TYPE_FLOAT)
         {
-            printf("error 7\n");
+            printf("error 7 at %d\n", exp->children[0]->first_line);
+            return NULL;
         }
 
         return one;
@@ -301,7 +313,8 @@ Type *analyse_exp(TreeNode *exp)
         }
         if (one != TYPE_INT)
         {
-            printf("error 7\n");
+            printf("error 7 at %d\n", exp->children[0]->first_line);
+            return NULL;
         }
         return one;
     }
@@ -311,14 +324,14 @@ Type *analyse_exp(TreeNode *exp)
         SymbolNode *temp = look_up_function_list(exp->children[0]->value.str_val);
         if (temp == NULL)
         {
-            SymbolNode *var = look_up_variable_list(exp->children[0]->value.str_val);
+            SymbolNode *var = look_up_variable_list(exp->children[0]->value.str_val, false);
             if (var == NULL)
             {
-                printf("error 2\n");
+                printf("error 2 at %d\n", exp->children[0]->first_line);
             }
             else
             {
-                printf("error 11\n");
+                printf("error 11 at %d\n", exp->children[0]->first_line);
             }
 
             return NULL;
@@ -329,8 +342,10 @@ Type *analyse_exp(TreeNode *exp)
         TreeNode *args = exp->children[2];
         for (int i = 0; i < temp->num_of_paras; i++)
         {
-            if (args == NULL || temp->paras[i] != analyse_exp(args->children[0]))
+            if (args == NULL || type_equal(temp->paras[i], analyse_exp(args->children[0])) == false)
             {
+
+                printf("here 1 at %d  was %d but %d now\n", i, temp->paras[i]->u.basic, analyse_exp(args->children[0])->u.basic);
                 mis_match = true;
                 break;
             }
@@ -346,12 +361,13 @@ Type *analyse_exp(TreeNode *exp)
         }
         if (args != NULL)
         {
+            printf("here 2\n");
             mis_match = true;
         }
 
         if (mis_match == true)
         {
-            printf("error 9\n");
+            printf("[error 9 at %d\n", args->first_line);
         }
 
         return temp->type;
@@ -362,14 +378,14 @@ Type *analyse_exp(TreeNode *exp)
         SymbolNode *temp = look_up_function_list(exp->children[0]->value.str_val);
         if (temp == NULL)
         {
-            SymbolNode *var = look_up_variable_list(exp->children[0]->value.str_val);
+            SymbolNode *var = look_up_variable_list(exp->children[0]->value.str_val, false);
             if (var == NULL)
             {
-                printf("error 2\n");
+                printf("error 2 at %d\n", exp->children[0]->first_line);
             }
             else
             {
-                printf("error 11\n");
+                printf("error 11 at %d\n", exp->children[0]->first_line);
             }
 
             return NULL;
@@ -378,7 +394,7 @@ Type *analyse_exp(TreeNode *exp)
 
         if (temp->num_of_paras != 0)
         {
-            printf("error 9\n");
+            printf("error 9 at %d\n", exp->children[0]->first_line);
         }
 
         return temp->type;
@@ -388,13 +404,13 @@ Type *analyse_exp(TreeNode *exp)
         Type *temp = analyse_exp(exp->children[0]);
         if (temp == NULL || temp->kind != ARRAY)
         {
-            printf("error 10\n");
+            printf("error 10 at %d\n", exp->children[0]->first_line);
         }
 
         Type *index = analyse_exp(exp->children[2]);
         if (index == NULL || index->kind != BASIC || index->u.basic != 0)
         {
-            printf("error 12\n");
+            printf("error 12 at %d\n", exp->children[2]->first_line);
         }
 
         //TODO check temp's type
@@ -409,12 +425,11 @@ Type *analyse_exp(TreeNode *exp)
         Type *temp = analyse_exp(exp->children[0]);
         if (temp == NULL || temp->kind != STRUCTURE)
         {
-            printf("error 13\n");
-            //todo can i return?
+            printf("error 13 at %d\n", exp->children[0]->first_line);
             return NULL;
         }
 
-        FieldList *struct_fields = temp->u.structure;
+        FieldList *struct_fields = temp->u.structure->next;
 
         while (struct_fields != NULL)
         {
@@ -426,16 +441,16 @@ Type *analyse_exp(TreeNode *exp)
             struct_fields = struct_fields->next;
         }
 
-        printf("error 14\n");
+        printf("error 14 at %d\n", exp->children[2]->first_line);
         return NULL;
     }
     else if (exp->num_of_children == 1 && CHECK_TOKEN_TYPE(exp->children[0], ID_T))
     {
         //todo check
-        SymbolNode *temp = look_up_variable_list(exp->children[0]->value.str_val);
+        SymbolNode *temp = look_up_variable_list(exp->children[0]->value.str_val, false);
         if (temp == NULL)
         {
-            printf("error 1 \n", exp->children[0]->value.str_val);
+            printf("error 1 at %d\n", exp->children[0]->first_line);
             return NULL;
         }
         // todo check
@@ -465,13 +480,16 @@ void analyse_stmt(TreeNode *stmt, Type *return_type)
     }
     else if (stmt->num_of_children == 1 && CHECK_NON_TYPE(stmt->children[0], CompSt))
     {
+        add_boundary_to_symbol_list();
+        analyse_comp_st(stmt->children[0], return_type);
+        remove_scope_from_symbol_list();
     }
     else if (stmt->num_of_children == 3 && CHECK_TOKEN_TYPE(stmt->children[0], RETURN_T) && CHECK_NON_TYPE(stmt->children[1], Exp) && CHECK_TOKEN_TYPE(stmt->children[2], SEMI_T))
     {
         Type *type = analyse_exp(stmt->children[1]);
-        if (type != return_type)
+        if (type != NULL && type != return_type)
         {
-            printf("error 8\n");
+            printf("error 8 at %d\n", stmt->children[1]->first_line);
         }
     }
     else if (stmt->num_of_children == 5 && CHECK_TOKEN_TYPE(stmt->children[0], IF_T))
@@ -500,5 +518,25 @@ void analyse_stmt(TreeNode *stmt, Type *return_type)
     else
     {
         assert(false);
+    }
+}
+
+bool type_equal(Type *type1, Type *type2)
+{
+    if (type1 == type2)
+    {
+        return true;
+    }
+    else if (type1 == NULL || type2 == NULL)
+    {
+        return false;
+    }
+    else if (type1->kind == ARRAY && type2->kind == ARRAY)
+    {
+        return type_equal(type1->u.array.elem, type2->u.array.elem);
+    }
+    else
+    {
+        return false;
     }
 }

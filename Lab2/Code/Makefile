@@ -34,24 +34,42 @@ syntax-c: $(YFILE)
 # 定义的一些伪目标
 .PHONY: clean test
 test:
-	./parser ../Test/test1.cmm
-	./parser ../Test/test2.cmm
-	./parser ../Test/test3.cmm
-	./parser ../Test/test4.cmm
-	./parser ../Test/test5.cmm
-	./parser ../Test/test6.cmm
-	./parser ../Test/test7.cmm
-	./parser ../Test/test8.cmm
-	./parser ../Test/test9.cmm
-	./parser ../Test/test10.cmm
-	./parser ../Test/test11.cmm
-	./parser ../Test/test12.cmm
-	./parser ../Test/test13.cmm
-	./parser ../Test/test14.cmm
-	./parser ../Test/test15.cmm
-	./parser ../Test/test16.cmm
-	./parser ../Test/test17.cmm
-
+	# ./parser ../Test/test1.cmm
+	# ./parser ../Test/test2.cmm
+	# ./parser ../Test/test3.cmm
+	# ./parser ../Test/test4.cmm
+	# ./parser ../Test/test5.cmm
+	# ./parser ../Test/test6.cmm
+	# ./parser ../Test/test7.cmm
+	# ./parser ../Test/test8.cmm
+	# ./parser ../Test/test9.cmm
+	# ./parser ../Test/test10.cmm
+	# ./parser ../Test/test11.cmm
+	# ./parser ../Test/test12.cmm
+	# ./parser ../Test/test13.cmm
+	# ./parser ../Test/test14.cmm
+	# ./parser ../Test/test15.cmm
+	# ./parser ../Test/test16.cmm
+	# ./parser ../Test/test17.cmm
+	# ./parser ../Test/test18.cmm
+	# ./parser ../Test/test19.cmm
+	# ./parser ../Test/test20.cmm
+	# ./parser ../Test/b1.cmm
+	# ./parser ../Test/b2.cmm
+	# ./parser ../Test/c1.cmm
+	# ./parser ../Test/c2.cmm
+	# ./parser ../Test/d1.cmm
+	# ./parser ../Test/d2.cmm
+	# ./parser ../Test/d3.cmm
+	./parser ../Test/e1.cmm
+	./parser ../Test/e2.cmm
+	./parser ../Test/e3.cmm
+	# ./parser ../Test/t1.cmm
+	# ./parser ../Test/t2.cmm
+	# ./parser ../Test/t3.cmm
+	# ./parser ../Test/t4.cmm
+	# ./parser ../Test/t5.cmm
+	# ./parser ../Test/t6.cmm
 clean:
 	rm -f parser lex.yy.c syntax.tab.c syntax.tab.h syntax.output
 	rm -f $(OBJS) $(OBJS:.o=.d)

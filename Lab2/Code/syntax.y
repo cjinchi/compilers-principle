@@ -44,7 +44,7 @@
 
 
 %%
-Program : ExtDefList {$$ = create_nonterminal_node(Program,@$.first_line,1,$1);  head = $$; analyse_program(head);}
+Program : ExtDefList {$$ = create_nonterminal_node(Program,@$.first_line,1,$1);  head = $$; if(has_error==false)analyse_program(head);}
     ;
 ExtDefList : ExtDef ExtDefList {$$ = create_nonterminal_node(ExtDefList,@$.first_line,2,$1,$2);}
     | /* empty */ {$$ = create_nonterminal_node(ExtDefList,@$.first_line,0);}
@@ -52,6 +52,7 @@ ExtDefList : ExtDef ExtDefList {$$ = create_nonterminal_node(ExtDefList,@$.first
 ExtDef : Specifier ExtDecList SEMI {$$ = create_nonterminal_node(ExtDef,@$.first_line,3,$1,$2,$3);}
     | Specifier SEMI {$$ = create_nonterminal_node(ExtDef,@$.first_line,2,$1,$2);}
     | Specifier FunDec CompSt {$$ = create_nonterminal_node(ExtDef,@$.first_line,3,$1,$2,$3);}
+    | Specifier FunDec error {$$ = create_nonterminal_node(ExtDef,@$.first_line,3,$1,$2,create_error_node(@$.first_line)); yyerrok;}
     | error SEMI { $$ = create_nonterminal_node(ExtDef,@$.first_line,2,create_error_node(@$.first_line),$2); yyerrok; }
     | Specifier error { $$ = create_nonterminal_node(ExtDef,@$.first_line,2,$1,create_error_node(@$.first_line)); yyerrok; }
     | Specifier ExtDecList error { $$ = create_nonterminal_node(ExtDef,@$.first_line,3,$1,$2,create_error_node(@$.first_line)); yyerrok; }

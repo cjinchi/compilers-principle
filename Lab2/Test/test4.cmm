@@ -1,13 +1,12 @@
-int func(int i)
- {
- return i;
+int math_calculator(int a, int b, int c){
+ return a + b * c;
  }
 
- int func()
- {
- return 0;
+ float math_calculator(float a1, float b1, float c1, float d1){
+ return a1 * b1 + c1 * d1;
  }
 
  int main()
  {
+ return math_calculator(5,4,7);
  }

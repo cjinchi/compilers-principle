@@ -67,7 +67,7 @@ Type *get_type_from_specifier(TreeNode *node)
             else if (opt_tag->num_of_children == 1)
             {
                 //with name, process redefinition check
-                if (look_up_struct_list(opt_tag->children[0]->value.str_val) != NULL || look_up_variable_list(opt_tag->children[0]->value.str_val) != NULL)
+                if (look_up_struct_list(opt_tag->children[0]->value.str_val) != NULL || look_up_variable_list(opt_tag->children[0]->value.str_val, true) != NULL)
                 {
                     //TODOERROR
                     printf("error 16 at %d\n", opt_tag->first_line);
@@ -91,7 +91,7 @@ Type *get_type_from_specifier(TreeNode *node)
                 {
                     //TODOERROR
 
-                    printf("[error 15 %s\n", p->name);
+                    printf("[error 15 at %d\n", p->first_line);
                 }
                 else
                 {
@@ -100,7 +100,7 @@ Type *get_type_from_specifier(TreeNode *node)
 
                 if (p->init == true)
                 {
-                    printf("error 15\n");
+                    printf("error 15 at %d\n", p->first_line);
                 }
                 p = p->next;
             }
@@ -149,6 +149,7 @@ FieldList *get_def_list(TreeNode *def_list)
     assert(CHECK_NON_TYPE(def_list, DefList));
 
     FieldList *head = NULL;
+    FieldList *tail = NULL;
     while (def_list->num_of_children == 2)
     {
         TreeNode *def = def_list->children[0];
@@ -166,11 +167,12 @@ FieldList *get_def_list(TreeNode *def_list)
             if (head == NULL)
             {
                 head = dec_field;
+                tail = head;
             }
             else
             {
-                dec_field->next = head;
-                head = dec_field;
+                tail->next = dec_field;
+                tail = dec_field;
             }
 
             if (dec_list->num_of_children == 3)
@@ -211,6 +213,7 @@ FieldList *get_var_dec(TreeNode *var_dec, Type *def_type)
     assert(var_dec != NULL && CHECK_NON_TYPE(var_dec, VarDec));
     FieldList *ret = malloc(sizeof(*ret));
     Type *type_list = def_type;
+    ret->first_line = var_dec->first_line;
 
     while (var_dec->num_of_children == 4)
     {

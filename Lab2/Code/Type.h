@@ -36,6 +36,7 @@ struct FieldList_
     Type *type;      // 域的类型
     FieldList *next; // 下一个域
     bool init;
+    int first_line;
 };
 
 extern Type *struct_list;

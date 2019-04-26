@@ -11,4 +11,6 @@ Type *analyse_exp(TreeNode *exp);
 
 void analyse_stmt(TreeNode *stmt, Type *return_type);
 
+bool type_equal(Type *type1, Type *type2);
+
 #endif
