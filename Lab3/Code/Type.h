@@ -44,7 +44,7 @@ extern Type *struct_list;
 extern Type *TYPE_INT;
 extern Type *TYPE_FLOAT;
 
-extern FieldList *struct_field_list;
+// extern FieldList *struct_field_list;
 
 Type *get_type_from_specifier(TreeNode *node);
 
@@ -60,9 +60,9 @@ FieldList *get_var_dec(TreeNode *var_dec, Type *def_type);
 
 FieldList *get_var_list(TreeNode *var_list);
 
-void add_to_struct_field_list(FieldList *p);
+// void add_to_struct_field_list(FieldList *p);
 
-FieldList *look_up_struct_field_list(char *name);
+// FieldList *look_up_struct_field_list(char *name);
 
 bool type_equal(Type *type1, Type *type2);
 

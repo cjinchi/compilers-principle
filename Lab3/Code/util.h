@@ -1,7 +1,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#define NDEBUG
+// #define NDEBUG
 #include <assert.h>
 
 typedef enum

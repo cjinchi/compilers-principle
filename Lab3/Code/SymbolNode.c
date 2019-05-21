@@ -6,10 +6,10 @@
 
 SymbolNode *symbol_list = NULL;
 
-SymbolNode *look_up_variable_list(char *name, bool bound_sensitive)
+SymbolNode *look_up_variable_list(char *name)
 {
     SymbolNode *p = symbol_list;
-    while (p != NULL && (bound_sensitive == false || (bound_sensitive == true && p->kind != BOUNDARY)))
+    while (p != NULL)
     {
         if (p->kind == VARIABLE && strcmp(name, p->name) == 0)
         {
@@ -92,31 +92,4 @@ void add_to_function_list(char *name, Type *return_type, FieldList *paras)
         temp->next = symbol_list;
         symbol_list = temp;
     }
-}
-
-void add_boundary_to_symbol_list()
-{
-    SymbolNode *boundary = malloc(sizeof(*boundary));
-    boundary->kind = BOUNDARY;
-
-    if (symbol_list == NULL)
-    {
-        symbol_list = boundary;
-    }
-    else
-    {
-        boundary->next = symbol_list;
-        symbol_list = boundary;
-    }
-}
-
-void remove_scope_from_symbol_list()
-{
-    assert(symbol_list != NULL);
-    while (symbol_list->kind != BOUNDARY)
-    {
-        assert(symbol_list != NULL);
-        symbol_list = symbol_list->next;
-    }
-    symbol_list = symbol_list->next;
 }

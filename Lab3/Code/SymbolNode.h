@@ -10,8 +10,7 @@ struct SymbolNode_t
     enum
     {
         VARIABLE,
-        FUNCTION,
-        BOUNDARY
+        FUNCTION
     } kind;
     Type *type;                //type for variable OR return type for function
     struct SymbolNode_t *next; //for linked-list
@@ -25,15 +24,11 @@ typedef struct SymbolNode_t SymbolNode;
 
 extern SymbolNode *symbol_list;
 
-SymbolNode *look_up_variable_list(char *name, bool bound_sensitive);
+SymbolNode *look_up_variable_list(char *name);
 
 void add_to_variable_list(char *name, Type *type);
 
 SymbolNode *look_up_function_list(char *name);
 
 void add_to_function_list(char *name, Type *return_type, FieldList *paras);
-
-void add_boundary_to_symbol_list();
-
-void remove_scope_from_symbol_list();
 #endif

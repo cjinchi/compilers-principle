@@ -11,7 +11,7 @@ Type *struct_list = NULL;
 Type *TYPE_INT = NULL;
 Type *TYPE_FLOAT = NULL;
 
-FieldList *struct_field_list = NULL;
+// FieldList *struct_field_list = NULL;
 
 Type *get_type_from_specifier(TreeNode *node)
 {
@@ -67,7 +67,7 @@ Type *get_type_from_specifier(TreeNode *node)
             else if (opt_tag->num_of_children == 1)
             {
                 //with name, process redefinition check
-                if (look_up_struct_list(opt_tag->children[0]->value.str_val) != NULL || look_up_variable_list(opt_tag->children[0]->value.str_val, true) != NULL)
+                if (look_up_struct_list(opt_tag->children[0]->value.str_val) != NULL || look_up_variable_list(opt_tag->children[0]->value.str_val) != NULL)
                 {
                     print_semantic_error(16, opt_tag->first_line);
                 }
@@ -82,18 +82,18 @@ Type *get_type_from_specifier(TreeNode *node)
             FieldList *def_field_list = get_def_list(def_list);
             FieldList *p = def_field_list;
 
-            struct_field_list = NULL;
+            // struct_field_list = NULL;
 
             while (p != NULL)
             {
-                if (look_up_struct_field_list(p->name) != NULL)
-                {
-                    print_semantic_error(15, p->first_line);
-                }
-                else
-                {
-                    add_to_struct_field_list(p);
-                }
+                // if (look_up_struct_field_list(p->name) != NULL)
+                // {
+                //     print_semantic_error(15, p->first_line);
+                // }
+                // else
+                // {
+                //     add_to_struct_field_list(p);
+                // }
 
                 if (p->assigned_with != NULL)
                 {
@@ -259,36 +259,36 @@ FieldList *get_var_list(TreeNode *var_list)
     return ret;
 }
 
-void add_to_struct_field_list(FieldList *p)
-{
-    FieldList *temp = malloc(sizeof(*temp));
-    memcpy(temp, p, sizeof(*temp));
-    temp->next = NULL;
+// void add_to_struct_field_list(FieldList *p)
+// {
+//     FieldList *temp = malloc(sizeof(*temp));
+//     memcpy(temp, p, sizeof(*temp));
+//     temp->next = NULL;
 
-    if (struct_field_list == NULL)
-    {
-        struct_field_list = temp;
-    }
-    else
-    {
-        temp->next = struct_field_list;
-        struct_field_list = temp;
-    }
-}
+//     if (struct_field_list == NULL)
+//     {
+//         struct_field_list = temp;
+//     }
+//     else
+//     {
+//         temp->next = struct_field_list;
+//         struct_field_list = temp;
+//     }
+// }
 
-FieldList *look_up_struct_field_list(char *name)
-{
-    FieldList *p = struct_field_list;
-    while (p != NULL)
-    {
-        if (strcmp(p->name, name) == 0)
-        {
-            return p;
-        }
-        p = p->next;
-    }
-    return NULL;
-}
+// FieldList *look_up_struct_field_list(char *name)
+// {
+//     FieldList *p = struct_field_list;
+//     while (p != NULL)
+//     {
+//         if (strcmp(p->name, name) == 0)
+//         {
+//             return p;
+//         }
+//         p = p->next;
+//     }
+//     return NULL;
+// }
 
 bool type_equal(Type *type1, Type *type2)
 {

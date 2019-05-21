@@ -42,12 +42,9 @@ void analyse_program(TreeNode *program)
             //func definition
             TreeNode *fun_dec = childrens[1];
 
-            //boundary added in the following function
             analyse_fun_dec(fun_dec, type);
 
-            //dont't add boundary here
             analyse_comp_st(childrens[2], type);
-            remove_scope_from_symbol_list();
         }
         else
         {
@@ -78,7 +75,7 @@ void analyse_comp_st(TreeNode *comp_st, Type *return_type)
         }
 
         //check if var name used
-        if (look_up_variable_list(p->name, true) != NULL || look_up_struct_list(p->name) != NULL)
+        if (look_up_variable_list(p->name) != NULL || look_up_struct_list(p->name) != NULL)
         {
             print_semantic_error(3, p->first_line);
         }
@@ -224,9 +221,7 @@ void analyse_stmt(TreeNode *stmt, Type *return_type)
     else if (stmt->num_of_children == 1 && CHECK_NON_TYPE(stmt->children[0], CompSt))
     {
         //CompSt
-        add_boundary_to_symbol_list();
         analyse_comp_st(stmt->children[0], return_type);
-        remove_scope_from_symbol_list();
     }
     else if (stmt->num_of_children == 3 && CHECK_TOKEN_TYPE(stmt->children[0], RETURN_T) && CHECK_NON_TYPE(stmt->children[1], Exp) && CHECK_TOKEN_TYPE(stmt->children[2], SEMI_T))
     {
@@ -276,7 +271,7 @@ void analyse_ext_dec_list(TreeNode *ext_dec_list, Type *type)
         TreeNode *var_dec = ext_dec_list->children[0];
 
         FieldList *temp = get_var_dec(var_dec, type);
-        if (look_up_variable_list(temp->name, true) != NULL || look_up_struct_list(temp->name) != NULL)
+        if (look_up_variable_list(temp->name) != NULL || look_up_struct_list(temp->name) != NULL)
         {
             print_semantic_error(3, temp->first_line);
         }
@@ -313,11 +308,9 @@ void analyse_fun_dec(TreeNode *fun_dec, Type *return_type)
         add_to_function_list(fun_dec->children[0]->value.str_val, return_type, var_list);
     }
 
-    add_boundary_to_symbol_list();
-
     while (var_list != NULL)
     {
-        if (look_up_variable_list(var_list->name, true) != NULL || look_up_struct_list(var_list->name) != NULL)
+        if (look_up_variable_list(var_list->name) != NULL || look_up_struct_list(var_list->name) != NULL)
         {
             print_semantic_error(3, var_list->first_line);
         }
@@ -327,6 +320,7 @@ void analyse_fun_dec(TreeNode *fun_dec, Type *return_type)
         }
 
         var_list = var_list->next;
+        assert(CHECK_NON_TYPE(fun_dec, FunDec));
     }
 }
 
@@ -425,7 +419,7 @@ Type *check_func_call(TreeNode *id, TreeNode *args)
     //check redefinition
     if (temp == NULL)
     {
-        SymbolNode *var = look_up_variable_list(id->value.str_val, false);
+        SymbolNode *var = look_up_variable_list(id->value.str_val);
         if (var == NULL)
         {
             print_semantic_error(2, id->first_line);
@@ -525,7 +519,7 @@ Type *check_dot(TreeNode *left, TreeNode *right)
 
 Type *check_id(TreeNode *id)
 {
-    SymbolNode *temp = look_up_variable_list(id->value.str_val, false);
+    SymbolNode *temp = look_up_variable_list(id->value.str_val);
     if (temp == NULL)
     {
         print_semantic_error(1, id->first_line);
