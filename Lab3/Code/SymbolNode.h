@@ -2,7 +2,10 @@
 #define SYMBOL_NODE_H
 
 #include "type.h"
-#include "InterCode.h"
+#include "Operand.h"
+
+typedef struct Operand_ Operand;
+typedef struct SymbolNode_t SymbolNode;
 
 struct SymbolNode_t
 {
@@ -23,8 +26,6 @@ struct SymbolNode_t
     //Part three: variable only
     Operand *op;
 };
-
-typedef struct SymbolNode_t SymbolNode;
 
 extern SymbolNode *symbol_list;
 

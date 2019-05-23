@@ -4,6 +4,8 @@
 // #define NDEBUG
 #include <assert.h>
 
+#include "TreeNode.h"
+
 typedef enum
 {
     false,
@@ -71,6 +73,8 @@ typedef enum
 void setup();
 
 void print_semantic_error(int error_id, int line_num);
+
+void handle(TreeNode* root);
 
 extern char *RELOP_NO_EQUAL;
 extern char *READ;

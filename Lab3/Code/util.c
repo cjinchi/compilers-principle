@@ -1,6 +1,9 @@
 #include "util.h"
 #include "Type.h"
 #include <stdlib.h>
+#include "analyse_tree.h"
+#include "InterCode.h"
+#include "translate.h"
 
 void setup()
 {
@@ -21,3 +24,9 @@ void print_semantic_error(int error_id, int line_num)
 char *RELOP_NO_EQUAL = "!=";
 char *READ = "read";
 char *WRITE = "write";
+
+void handle(TreeNode *root)
+{
+    analyse_program(root);
+    print_codes(translate_Program(root));
+}

@@ -2,31 +2,10 @@
 #define INTER_CODE_H
 
 #include "TreeNode.h"
-#include "SymbolNode.h"
+#include "Operand.h"
 
-typedef struct Operand_ Operand;
 typedef struct InterCode_ InterCode;
 
-struct Operand_
-{
-    enum
-    {
-        TEMP_VARIABLE,
-        REAL_VARIABLE,
-        CONSTANT,
-        ADDRESS
-    } kind;
-    union {
-        //for temp_var
-        int var_no;
-        //for constant
-        int value;
-        //for real_var
-        SymbolNode *var_node;
-        //for address
-        Operand *addr;
-    } u;
-};
 struct InterCode_
 {
     enum
@@ -73,7 +52,7 @@ struct InterCode_
         struct
         {
             Operand *left;
-            Operand *right;
+            char *name;
         } call;
     } u;
 
@@ -86,17 +65,38 @@ extern InterCode *ic_list_tail;
 extern int temp_var_id;
 
 InterCode *new_inter_code(int kind);
+
 InterCode *concat_inter_codes(int num, ...);
+
 InterCode *new_assign_code(Operand *left, Operand *right);
+
+Operand *new_temp_op();
+
+Operand *new_constant_op(int n);
+
+Operand *new_real_var_op(char *name);
+
+Operand *new_label();
+
 InterCode *new_label_code(Operand *op);
 InterCode *new_goto_code(Operand *op);
 InterCode *new_return_code(Operand *op);
-InterCode *new_read_code(Operand *op);
-InterCode *new_call_code(Operand *left, Operand *right);
 
-Operand *new_temp_op();
-Operand *new_constant_op(int n);
-Operand *new_real_var_op(char *name);
-Operand *new_label();
+InterCode *new_read_code(Operand *op);
+
+InterCode *new_call_code(Operand *left, char *name);
+
+InterCode *new_write_code(Operand *op);
+
+InterCode *new_arg_code(Operand *op);
+
+InterCode *new_function_code(char *name);
+
+InterCode *new_param_code(char *name);
+
+InterCode *new_arithmetic_code(int kind, Operand *result, Operand *left, Operand *right);
+
+InterCode *new_if_goto_code(Operand *left, Operand *right, char *relop, Operand *dst);
+void print_codes(InterCode *codes);
 
 #endif

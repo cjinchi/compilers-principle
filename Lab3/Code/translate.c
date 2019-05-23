@@ -1,4 +1,5 @@
 #include "translate.h"
+#include <stdlib.h>
 
 InterCode *translate_Program(TreeNode *program)
 {
@@ -48,8 +49,7 @@ InterCode *translate_Fun_dec(TreeNode *fun_dec)
 {
     assert(CHECK_NON_TYPE(fun_dec, FunDec));
 
-    InterCode *ret = new_inter_code(FUNCTION_CODE);
-    ret->u.node = look_up_function_list(fun_dec->children[0]->value.str_val);
+    InterCode *ret = new_function_code(fun_dec->children[0]->value.str_val);
 
     if (fun_dec->num_of_children == 4)
     {
@@ -64,14 +64,14 @@ InterCode *translate_Comp_st(TreeNode *comp_st)
 {
     assert(CHECK_NON_TYPE(comp_st, CompSt));
 
-    return translate_Stmt_list(comp_st->children[2]);
+    return concat_inter_codes(2, translate_Def_list(comp_st->children[1]), translate_Stmt_list(comp_st->children[2]));
 }
 
 InterCode *translate_Var_list(TreeNode *var_list)
 {
     assert(CHECK_NON_TYPE(var_list, VarList));
 
-    TreeNode *ret = NULL;
+    InterCode *ret = NULL;
 
     while (var_list->num_of_children == 1 || var_list->num_of_children == 3)
     {
@@ -81,8 +81,7 @@ InterCode *translate_Var_list(TreeNode *var_list)
         TreeNode *id = var_dec->children[0];
 
         //core code
-        InterCode *code = new_inter_code(PARAM_CODE);
-        code->u.node = look_up_variable_list(id->value.str_val);
+        InterCode *code = new_param_code(id->value.str_val);
         ret = concat_inter_codes(2, ret, code);
 
         if (var_list->num_of_children == 3)
@@ -250,10 +249,7 @@ InterCode *translate_Exp(TreeNode *exp, Operand *place)
         Operand *t1 = new_temp_op();
         InterCode *code1 = translate_Exp(exp->children[1], t1);
 
-        InterCode *code2 = new_inter_code(MINUS_T);
-        code2->u.binop.result = place;
-        code2->u.binop.left = zero;
-        code2->u.binop.right = t1;
+        InterCode *code2 = new_arithmetic_code(MINUS_CODE,place,zero,t1);
 
         ret = concat_inter_codes(2, code1, code2);
     }
@@ -264,7 +260,25 @@ InterCode *translate_Exp(TreeNode *exp, Operand *place)
     }
     else if (exp->num_of_children == 4 && CHECK_TOKEN_TYPE(exp->children[0], ID_T) && CHECK_TOKEN_TYPE(exp->children[1], LP_T) && CHECK_NON_TYPE(exp->children[2], Args) && CHECK_TOKEN_TYPE(exp->children[3], RP_T))
     {
+        TreeNode *id = exp->children[0];
+        OperandWrapper *arg_list = malloc(sizeof(*arg_list));
         //ID LP Args RP
+        InterCode *code1 = translate_Args(exp->children[2], arg_list);
+        if (strcmp(WRITE, id->value.str_val) == 0)
+        {
+            ret = concat_inter_codes(2, code1, new_write_code(arg_list->head));
+        }
+        else
+        {
+            InterCode *code2 = NULL;
+            Operand *args = arg_list->head;
+            while (args != NULL)
+            {
+                code2 = concat_inter_codes(2, args, code2);
+                args = args->next;
+            }
+            ret = concat_inter_codes(3, code1, code2, new_call_code(place, id->value.str_val));
+        }
     }
     else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[0], ID_T) && CHECK_TOKEN_TYPE(exp->children[1], LP_T) && CHECK_TOKEN_TYPE(exp->children[2], RP_T))
     {
@@ -343,10 +357,8 @@ InterCode *translate_binary_arithmetic(TreeNode *exp, Operand *place)
     {
         kind = DIV_CODE;
     }
-    InterCode *code3 = new_inter_code(kind);
-    code3->u.binop.result = place;
-    code3->u.binop.left = left;
-    code3->u.binop.right = right;
+
+    InterCode *code3 = new_arithmetic_code(kind,place,left,right);
 
     return concat_inter_codes(3, code1, code2, code3);
 }
@@ -358,12 +370,10 @@ InterCode *handle_Cond(TreeNode *exp, Operand *place)
     Operand *zero = new_constant_op(0);
     InterCode *code0 = new_assign_code(place, zero);
     InterCode *code1 = translate_Cond(exp, label_true, label_false);
-    InterCode *code2 = new_inter_code(LABEL_CODE);
-    code2->u.op = label_true;
+    InterCode *code2 = new_label_code(label_true);
     Operand *one = new_constant_op(1);
     InterCode *code3 = new_assign_code(place, one);
-    InterCode *code4 = new_inter_code(LABEL_CODE);
-    code4->u.op = label_false;
+    InterCode *code4 = new_label_code(label_false);
 
     return concat_inter_codes(5, code0, code1, code2, code3, code4);
 }
@@ -378,13 +388,8 @@ InterCode *translate_Cond(TreeNode *exp, Operand *label_true, Operand *label_fal
         Operand *t2 = new_temp_op();
         InterCode *code1 = translate_Exp(exp->children[0], t1);
         InterCode *code2 = translate_Exp(exp->children[2], t2);
-        InterCode *code3 = new_inter_code(IF_GOTO_CODE);
-        code3->u.if_goto.left = t1;
-        code3->u.if_goto.right = t2;
-        code3->u.if_goto.relop = exp->children[1]->value.str_val;
-        code3->u.if_goto.dst = label_true;
-        InterCode *code4 = new_inter_code(GOTO_CODE);
-        code4->u.op = label_false;
+        InterCode *code3 = new_if_goto_code(t1,t2,exp->children[1]->value.str_val,label_true);
+        InterCode *code4 = new_goto_code(label_false);
         ret = concat_inter_codes(4, code1, code2, code3, code4);
     }
     else if (exp->num_of_children == 2 && CHECK_TOKEN_TYPE(exp->children[0], NOT_T))
@@ -395,8 +400,7 @@ InterCode *translate_Cond(TreeNode *exp, Operand *label_true, Operand *label_fal
     {
         Operand *label1 = new_label();
         InterCode *code1 = translate_Cond(exp->children[0], label1, label_false);
-        InterCode *code2 = new_inter_code(LABEL_CODE);
-        code2->u.op = label1;
+        InterCode *code2 = new_label_code(label1);
         InterCode *code3 = translate_Cond(exp->children[2], label_true, label_false);
         ret = concat_inter_codes(3, code1, code2, code3);
     }
@@ -404,8 +408,7 @@ InterCode *translate_Cond(TreeNode *exp, Operand *label_true, Operand *label_fal
     {
         Operand *label1 = new_label();
         InterCode *code1 = translate_Cond(exp->children[0], label_true, label1);
-        InterCode *code2 = new_inter_code(LABEL_CODE);
-        code2->u.op = label1;
+        InterCode *code2 = new_label_code(label1);
         InterCode *code3 = translate_Cond(exp->children[2], label_true, label_false);
         ret = concat_inter_codes(3, code1, code2, code3);
     }
@@ -414,17 +417,82 @@ InterCode *translate_Cond(TreeNode *exp, Operand *label_true, Operand *label_fal
         Operand *t1 = new_temp_op();
         Operand *zero = new_constant_op(0);
         InterCode *code1 = translate_Exp(exp, t1);
-        InterCode *code2 = new_inter_code(IF_GOTO_CODE);
-
-        code2->u.if_goto.left = t1;
-        code2->u.if_goto.right = zero;
-        code2->u.if_goto.relop = RELOP_NO_EQUAL;
-        code2->u.if_goto.dst = label_true;
-
-        InterCode *code3 = new_inter_code(GOTO_CODE);
-        code3->u.op = label_false;
+        InterCode *code2 = new_if_goto_code(t1,zero,RELOP_NO_EQUAL,label_true);
+        InterCode *code3 = new_goto_code(label_false);
         ret = concat_inter_codes(3, code1, code2, code3);
     }
 
     return ret;
+}
+
+InterCode *translate_Args(TreeNode *args, OperandWrapper *list)
+{
+    Operand *t1 = new_temp_op();
+    InterCode *code1 = translate_Exp(args->children[0], t1);
+    list->head = concat_operands(2, list->head, t1);
+    if (args->num_of_children == 3)
+    {
+        return concat_inter_codes(2, code1, translate_Args(args->children[2], list));
+    }
+    else
+    {
+        return code1;
+    }
+}
+
+InterCode *translate_Def_list(TreeNode *def_list)
+{
+    if (def_list->num_of_children == 0)
+    {
+        return NULL;
+    }
+    return concat_inter_codes(2, translate_Def(def_list->children[0]), translate_Def_list(def_list->children[1]));
+}
+
+InterCode *translate_Def(TreeNode *def)
+{
+    return translate_Dec_list(def->children[1]);
+}
+
+InterCode *translate_Dec_list(TreeNode *dec_list)
+{
+    InterCode *code1 = translate_Dec(dec_list->children[0]);
+    if (dec_list->num_of_children == 1)
+    {
+        return code1;
+    }
+    else
+    {
+        return concat_inter_codes(2, code1, translate_Dec_list(dec_list->children[2]));
+    }
+}
+
+InterCode *translate_Dec(TreeNode *dec)
+{
+    OperandWrapper *wrapper = malloc(sizeof(*wrapper));
+    InterCode *code1 = translate_Var_dec(dec->children[0], wrapper);
+    if (dec->num_of_children == 1)
+    {
+        return code1;
+    }
+    else
+    {
+        Operand *place = new_temp_op();
+        InterCode *code2 = translate_Exp(dec->children[2], place);
+        InterCode *code3 = new_assign_code(wrapper->head, place);
+        return concat_inter_codes(3, code1, code2, code3);
+    }
+}
+
+InterCode *translate_Var_dec(TreeNode *var_dec, OperandWrapper *wrapper)
+{
+    if (var_dec->num_of_children == 1)
+    {
+        wrapper->head = new_real_var_op(var_dec->children[0]->value.str_val);
+        return NULL;
+    }
+    else
+    {
+        assert(false);
+    }
 }
