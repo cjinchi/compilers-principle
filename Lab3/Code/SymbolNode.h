@@ -2,6 +2,7 @@
 #define SYMBOL_NODE_H
 
 #include "type.h"
+#include "InterCode.h"
 
 struct SymbolNode_t
 {
@@ -18,6 +19,9 @@ struct SymbolNode_t
     //Part two: function only
     int num_of_paras;
     Type **paras; //array, paras[i] means i-th para
+
+    //Part three: variable only
+    Operand *op;
 };
 
 typedef struct SymbolNode_t SymbolNode;

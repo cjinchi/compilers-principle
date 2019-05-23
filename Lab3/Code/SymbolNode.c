@@ -26,6 +26,7 @@ void add_to_variable_list(char *name, Type *type)
     temp->name = name;
     temp->kind = VARIABLE;
     temp->type = type;
+    temp->op = NULL;
 
     if (symbol_list == NULL)
     {
