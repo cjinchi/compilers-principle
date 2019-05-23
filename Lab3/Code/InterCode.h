@@ -55,13 +55,26 @@ struct InterCode_
     union {
         struct
         {
-            Operand *right, *left;
+            Operand *left, *right;
         } assign;
         struct
         {
             Operand *result, *left, *right;
         } binop;
         SymbolNode *node;
+        Operand *op;
+        struct
+        {
+            Operand *left;
+            char *relop;
+            Operand *right;
+            Operand *dst;
+        } if_goto;
+        struct
+        {
+            Operand *left;
+            Operand *right;
+        } call;
     } u;
 
     InterCode *next;
@@ -75,9 +88,15 @@ extern int temp_var_id;
 InterCode *new_inter_code(int kind);
 InterCode *concat_inter_codes(int num, ...);
 InterCode *new_assign_code(Operand *left, Operand *right);
+InterCode *new_label_code(Operand *op);
+InterCode *new_goto_code(Operand *op);
+InterCode *new_return_code(Operand *op);
+InterCode *new_read_code(Operand *op);
+InterCode *new_call_code(Operand *left, Operand *right);
 
 Operand *new_temp_op();
 Operand *new_constant_op(int n);
 Operand *new_real_var_op(char *name);
+Operand *new_label();
 
 #endif

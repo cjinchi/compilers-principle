@@ -117,16 +117,65 @@ InterCode *translate_Stmt(TreeNode *stmt)
     assert(CHECK_NON_TYPE(stmt, Stmt));
 
     InterCode *ret = NULL;
+    Operand *place = new_temp_op();
 
     if (stmt->num_of_children == 2 && CHECK_NON_TYPE(stmt->children[0], Exp))
     {
-        ret = concat_inter_codes(2, ret, translate_Exp(stmt->children[0]));
+        //Exp SEMI
+        ret = concat_inter_codes(2, ret, translate_Exp(stmt->children[0], place));
+    }
+    else if (stmt->num_of_children == 1 && CHECK_NON_TYPE(stmt->children[0], CompSt))
+    {
+        //CompSt
+        ret = translate_Comp_st(stmt->children[0]);
+    }
+    else if (stmt->num_of_children == 3 && CHECK_TOKEN_TYPE(stmt->children[0], RETURN_T) && CHECK_NON_TYPE(stmt->children[1], Exp) && CHECK_TOKEN_TYPE(stmt->children[2], SEMI_T))
+    {
+        //RETURN Exp SEMI
+        Operand *t1 = new_temp_op();
+        InterCode *code1 = translate_Exp(stmt->children[1], t1);
+        InterCode *code2 = new_return_code(t1);
+        ret = concat_inter_codes(2, code1, code2);
+    }
+    else if (stmt->num_of_children == 5 && CHECK_TOKEN_TYPE(stmt->children[0], IF_T))
+    {
+        //IF LP Exp RP Stmt
+
+        Operand *label1 = new_label();
+        Operand *label2 = new_label();
+        InterCode *code1 = translate_Cond(stmt->children[2], label1, label2);
+        InterCode *code2 = translate_Stmt(stmt->children[4]);
+        ret = concat_inter_codes(4, code1, new_label_code(label1), code2, new_label_code(label2));
+    }
+    else if (stmt->num_of_children == 7 && CHECK_TOKEN_TYPE(stmt->children[0], IF_T))
+    {
+        //IF LP Exp RP Stmt ELSE Stmt
+        Operand *label1 = new_label();
+        Operand *label2 = new_label();
+        Operand *label3 = new_label();
+        InterCode *code1 = translate_Cond(stmt->children[2], label1, label2);
+        InterCode *code2 = translate_Stmt(stmt->children[4]);
+        InterCode *code3 = translate_Stmt(stmt->children[6]);
+
+        ret = concat_inter_codes(7, code1, new_label_code(label1), code2, new_goto_code(label3), new_label_code(label2), code3, new_label_code(label3));
+    }
+    else if (stmt->num_of_children == 5 && CHECK_TOKEN_TYPE(stmt->children[0], WHILE_T))
+    {
+        //WHILE LP Exp RP Stmt
+        Operand *label1 = new_label();
+        Operand *label2 = new_label();
+        Operand *label3 = new_label();
+
+        InterCode *code1 = translate_Cond(stmt->children[2], label2, label3);
+        InterCode *code2 = translate_Stmt(stmt->children[4]);
+
+        ret = concat_inter_codes(6, new_label_code(label1), code1, new_label_code(label2), code2, new_goto_code(label1), new_label_code(label3));
     }
     else
     {
-        // todo
-        assert(0);
+        assert(false);
     }
+
     return ret;
 }
 
@@ -144,10 +193,10 @@ InterCode *translate_Exp(TreeNode *exp, Operand *place)
         if (exp1->num_of_children == 1 && CHECK_TOKEN_TYPE(exp1->children[0], ID_T))
         {
             //Exp1 -> ID
-            Operand *right = new_temp_op();
-            InterCode *code1 = translate_Exp(exp2, t1);
             Operand *left = new_real_var_op(exp1->children[0]->value.str_val);
-            InterCode *code2 = new_assign_code(left, right);
+            Operand *t1 = new_temp_op();
+            InterCode *code1 = translate_Exp(exp2, t1);
+            InterCode *code2 = new_assign_code(left, t1);
             InterCode *code3 = new_assign_code(place, left);
 
             ret = concat_inter_codes(4, ret, code1, code2, code3);
@@ -169,7 +218,8 @@ InterCode *translate_Exp(TreeNode *exp, Operand *place)
     {
         assert(CHECK_NON_TYPE(exp->children[0], Exp));
         assert(CHECK_NON_TYPE(exp->children[2], Exp));
-        assert(false);
+
+        ret = handle_Cond(exp, place);
     }
     else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[1], PLUS_T))
     {
@@ -214,11 +264,20 @@ InterCode *translate_Exp(TreeNode *exp, Operand *place)
     }
     else if (exp->num_of_children == 4 && CHECK_TOKEN_TYPE(exp->children[0], ID_T) && CHECK_TOKEN_TYPE(exp->children[1], LP_T) && CHECK_NON_TYPE(exp->children[2], Args) && CHECK_TOKEN_TYPE(exp->children[3], RP_T))
     {
-        assert(false);
+        //ID LP Args RP
     }
     else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[0], ID_T) && CHECK_TOKEN_TYPE(exp->children[1], LP_T) && CHECK_TOKEN_TYPE(exp->children[2], RP_T))
     {
-        assert(false);
+        //ID LP RP
+        TreeNode *id = exp->children[0];
+        if (strcmp(READ, id->value.str_val) == 0)
+        {
+            ret = new_read_code(place);
+        }
+        else
+        {
+            ret = new_call_code(place, id->value.str_val);
+        }
     }
     else if (exp->num_of_children == 4 && CHECK_NON_TYPE(exp->children[0], Exp) && CHECK_TOKEN_TYPE(exp->children[1], LB_T) && CHECK_NON_TYPE(exp->children[2], Exp) && CHECK_TOKEN_TYPE(exp->children[3], RB_T))
     {
@@ -290,4 +349,82 @@ InterCode *translate_binary_arithmetic(TreeNode *exp, Operand *place)
     code3->u.binop.right = right;
 
     return concat_inter_codes(3, code1, code2, code3);
+}
+
+InterCode *handle_Cond(TreeNode *exp, Operand *place)
+{
+    Operand *label_true = new_label();
+    Operand *label_false = new_label();
+    Operand *zero = new_constant_op(0);
+    InterCode *code0 = new_assign_code(place, zero);
+    InterCode *code1 = translate_Cond(exp, label_true, label_false);
+    InterCode *code2 = new_inter_code(LABEL_CODE);
+    code2->u.op = label_true;
+    Operand *one = new_constant_op(1);
+    InterCode *code3 = new_assign_code(place, one);
+    InterCode *code4 = new_inter_code(LABEL_CODE);
+    code4->u.op = label_false;
+
+    return concat_inter_codes(5, code0, code1, code2, code3, code4);
+}
+
+InterCode *translate_Cond(TreeNode *exp, Operand *label_true, Operand *label_false)
+{
+    InterCode *ret = NULL;
+
+    if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[1], RELOP_T))
+    {
+        Operand *t1 = new_temp_op();
+        Operand *t2 = new_temp_op();
+        InterCode *code1 = translate_Exp(exp->children[0], t1);
+        InterCode *code2 = translate_Exp(exp->children[2], t2);
+        InterCode *code3 = new_inter_code(IF_GOTO_CODE);
+        code3->u.if_goto.left = t1;
+        code3->u.if_goto.right = t2;
+        code3->u.if_goto.relop = exp->children[1]->value.str_val;
+        code3->u.if_goto.dst = label_true;
+        InterCode *code4 = new_inter_code(GOTO_CODE);
+        code4->u.op = label_false;
+        ret = concat_inter_codes(4, code1, code2, code3, code4);
+    }
+    else if (exp->num_of_children == 2 && CHECK_TOKEN_TYPE(exp->children[0], NOT_T))
+    {
+        ret = translate_Cond(exp, label_false, label_true);
+    }
+    else if (exp->num_of_children == 3 && CHECK_NON_TYPE(exp->children[1], AND_T))
+    {
+        Operand *label1 = new_label();
+        InterCode *code1 = translate_Cond(exp->children[0], label1, label_false);
+        InterCode *code2 = new_inter_code(LABEL_CODE);
+        code2->u.op = label1;
+        InterCode *code3 = translate_Cond(exp->children[2], label_true, label_false);
+        ret = concat_inter_codes(3, code1, code2, code3);
+    }
+    else if (exp->num_of_children == 3 && CHECK_NON_TYPE(exp->children[1], OR_T))
+    {
+        Operand *label1 = new_label();
+        InterCode *code1 = translate_Cond(exp->children[0], label_true, label1);
+        InterCode *code2 = new_inter_code(LABEL_CODE);
+        code2->u.op = label1;
+        InterCode *code3 = translate_Cond(exp->children[2], label_true, label_false);
+        ret = concat_inter_codes(3, code1, code2, code3);
+    }
+    else
+    {
+        Operand *t1 = new_temp_op();
+        Operand *zero = new_constant_op(0);
+        InterCode *code1 = translate_Exp(exp, t1);
+        InterCode *code2 = new_inter_code(IF_GOTO_CODE);
+
+        code2->u.if_goto.left = t1;
+        code2->u.if_goto.right = zero;
+        code2->u.if_goto.relop = RELOP_NO_EQUAL;
+        code2->u.if_goto.dst = label_true;
+
+        InterCode *code3 = new_inter_code(GOTO_CODE);
+        code3->u.op = label_false;
+        ret = concat_inter_codes(3, code1, code2, code3);
+    }
+
+    return ret;
 }

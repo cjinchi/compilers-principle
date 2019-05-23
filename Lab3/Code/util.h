@@ -72,4 +72,8 @@ void setup();
 
 void print_semantic_error(int error_id, int line_num);
 
+extern char *RELOP_NO_EQUAL;
+extern char *READ;
+extern char *WRITE;
+
 #endif

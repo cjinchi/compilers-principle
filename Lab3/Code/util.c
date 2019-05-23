@@ -17,3 +17,7 @@ void print_semantic_error(int error_id, int line_num)
 {
     printf("Error type %d at Line %d: Semantic error.\n", error_id, line_num);
 }
+
+char *RELOP_NO_EQUAL = "!=";
+char *READ = "read";
+char *WRITE = "write";

@@ -14,4 +14,6 @@ InterCode *translate_Fun_dec(TreeNode *fun_dec);
 
 InterCode *translate_Comp_st(TreeNode *comp_st);
 
+InterCode *translate_binary_arithmetic(TreeNode *exp, Operand *place);
+
 #endif

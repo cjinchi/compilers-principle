@@ -93,3 +93,42 @@ Operand *new_real_var_op(char *name)
         return ret;
     }
 }
+
+Operand *new_label()
+{
+    return new_temp_op();
+}
+
+InterCode *new_label_code(Operand *op)
+{
+    InterCode *code = new_inter_code(LABEL_CODE);
+    code->u.op = op;
+    return code;
+}
+InterCode *new_goto_code(Operand *op)
+{
+    InterCode *code = new_inter_code(GOTO_CODE);
+    code->u.op = op;
+    return code;
+}
+InterCode *new_return_code(Operand *op)
+{
+    InterCode *code = new_inter_code(RETURN_CODE);
+    code->u.op = op;
+    return code;
+}
+
+InterCode *new_read_code(Operand *op)
+{
+    InterCode *code = new_inter_code(READ_CODE);
+    code->u.op = op;
+    return code;
+}
+
+InterCode *new_call_code(Operand *left, Operand *right)
+{
+    InterCode *code = new_inter_code(CALL_CODE);
+    code->u.call.left = left;
+    code->u.call.right = right;
+    return code;
+}
