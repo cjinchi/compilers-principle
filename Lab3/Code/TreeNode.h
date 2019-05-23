@@ -1,8 +1,9 @@
 #ifndef TREENODE_H
 #define TREENODE_H
 
-//for strdup bug
-#define _POSIX_C_SOURCE 200809L
+// //for strdup bug
+// #define _POSIX_C_SOURCE 200809L
+
 #include "util.h"
 #include "string.h"
 
@@ -42,5 +43,7 @@ bool check_token_type(TreeNode *node, int type);
 
 #define CHECK_NON_TYPE(node, type) (check_nonterminal_type(node, type) == true)
 #define CHECK_TOKEN_TYPE(node, type) (check_token_type(node, type) == true)
+
+void handle(TreeNode *root);
 
 #endif

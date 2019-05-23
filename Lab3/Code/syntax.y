@@ -43,7 +43,7 @@
 
 
 %%
-Program : ExtDefList {$$ = create_nonterminal_node(Program,@$.first_line,1,$1);  head = $$; if(has_error==false)handle(head);}
+Program : ExtDefList {$$ = create_nonterminal_node(Program,@$.first_line,1,$1);  head = $$;if(has_error==false)handle(head);}
     ;
 ExtDefList : ExtDef ExtDefList {$$ = create_nonterminal_node(ExtDefList,@$.first_line,2,$1,$2);}
     | /* empty */ {$$ = create_nonterminal_node(ExtDefList,@$.first_line,0);}

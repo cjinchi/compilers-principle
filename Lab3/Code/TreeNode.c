@@ -4,6 +4,8 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include "util.h"
+#include "analyse_tree.h"
+#include "translate.h"
 
 TreeNode *create_token_node(int t_type, int first_line)
 {
@@ -264,4 +266,10 @@ bool check_token_type(TreeNode *node, int type)
     {
         return false;
     }
+}
+
+void handle(TreeNode *root)
+{
+    analyse_program(root);
+    print_codes(translate_Program(root));
 }

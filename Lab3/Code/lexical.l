@@ -56,7 +56,7 @@ int main(int argc, char **argv)
 {
     setup();
 
-    if (argc <= 2)
+    if (argc <= 1)
         return 1;
     FILE *f = fopen(argv[1], "r");
     if (!f)

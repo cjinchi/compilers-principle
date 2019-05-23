@@ -54,6 +54,11 @@ struct InterCode_
             Operand *left;
             char *name;
         } call;
+        struct
+        {
+            Operand *op;
+            int size;
+        } dec;
     } u;
 
     InterCode *next;
@@ -97,6 +102,8 @@ InterCode *new_param_code(char *name);
 InterCode *new_arithmetic_code(int kind, Operand *result, Operand *left, Operand *right);
 
 InterCode *new_if_goto_code(Operand *left, Operand *right, char *relop, Operand *dst);
+
+InterCode *new_dec_size_code(Operand *op, int size);
 void print_codes(InterCode *codes);
 
 #endif

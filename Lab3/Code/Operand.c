@@ -1,5 +1,7 @@
 #include "Operand.h"
+#include "util.h"
 #include <stdarg.h>
+#include <string.h>
 
 Operand *concat_operands(int num, ...)
 {

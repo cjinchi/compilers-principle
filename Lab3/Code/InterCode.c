@@ -166,7 +166,7 @@ InterCode *new_param_code(char *name)
 
 InterCode *new_arithmetic_code(int kind, Operand *result, Operand *left, Operand *right)
 {
-    InterCode *ret = new_inter_code(MINUS_CODE);
+    InterCode *ret = new_inter_code(kind);
     ret->u.binop.result = result;
     ret->u.binop.left = left;
     ret->u.binop.right = right;
@@ -186,55 +186,59 @@ InterCode *new_if_goto_code(Operand *left, Operand *right, char *relop, Operand 
 char code_buffer[300];
 void print_codes(InterCode *codes)
 {
+    char *x, *y, *z, *f, *relop;
     while (codes != NULL)
     {
         switch (codes->kind)
         {
         case LABEL_CODE:
-            char *x = codes->u.node->name;
+            x = get_op_literal(codes->u.op);
             sprintf(code_buffer, "LABEL %s :", x);
+            free(x);
             break;
         case FUNCTION_CODE:
-            char *x = codes->u.node->name;
+            x = codes->u.node->name;
             sprintf(code_buffer, "FUNCTION %s :", x);
+
             break;
         case ASSIGN_CODE:
-            char *x = get_op_literal(codes->u.assign.left);
-            char *y = get_op_literal(codes->u.assign.right);
+            x = get_op_literal(codes->u.assign.left);
+            y = get_op_literal(codes->u.assign.right);
             sprintf(code_buffer, "%s := %s", x, y);
             free(x);
             free(y);
             break;
         case PLUS_CODE:
-            char *x = get_op_literal(codes->u.binop.result);
-            char *y = get_op_literal(codes->u.binop.left);
-            char *z = get_op_literal(codes->u.binop.right);
+            x = get_op_literal(codes->u.binop.result);
+            y = get_op_literal(codes->u.binop.left);
+            z = get_op_literal(codes->u.binop.right);
             sprintf(code_buffer, "%s := %s + %s", x, y, z);
             free(x);
             free(y);
             free(z);
             break;
         case MINUS_CODE:
-            char *x = get_op_literal(codes->u.binop.result);
-            char *y = get_op_literal(codes->u.binop.left);
-            char *z = get_op_literal(codes->u.binop.right);
+            x = get_op_literal(codes->u.binop.result);
+            y = get_op_literal(codes->u.binop.left);
+            z = get_op_literal(codes->u.binop.right);
             sprintf(code_buffer, "%s := %s - %s", x, y, z);
             free(x);
             free(y);
             free(z);
             break;
         case STAR_CODE:
-            char *x = get_op_literal(codes->u.binop.result);
-            char *y = get_op_literal(codes->u.binop.left);
-            char *z = get_op_literal(codes->u.binop.right);
+            x = get_op_literal(codes->u.binop.result);
+            y = get_op_literal(codes->u.binop.left);
+            z = get_op_literal(codes->u.binop.right);
             sprintf(code_buffer, "%s := %s * %s", x, y, z);
             free(x);
             free(y);
             free(z);
+            break;
         case DIV_CODE:
-            char *x = get_op_literal(codes->u.binop.result);
-            char *y = get_op_literal(codes->u.binop.left);
-            char *z = get_op_literal(codes->u.binop.right);
+            x = get_op_literal(codes->u.binop.result);
+            y = get_op_literal(codes->u.binop.left);
+            z = get_op_literal(codes->u.binop.right);
             sprintf(code_buffer, "%s := %s / %s", x, y, z);
             free(x);
             free(y);
@@ -242,50 +246,52 @@ void print_codes(InterCode *codes)
             break;
             break;
         case GOTO_CODE:
-            char *x = get_op_literal(codes->u.op);
+            x = get_op_literal(codes->u.op);
             sprintf(code_buffer, "GOTO %s", x);
             free(x);
             break;
         case IF_GOTO_CODE:
-            char *x = get_op_literal(codes->u.if_goto.left);
-            char *relop = codes->u.if_goto.relop;
-            char *y = get_op_literal(codes->u.if_goto.right);
-            char *z = get_op_literal(codes->u.if_goto.dst);
+            x = get_op_literal(codes->u.if_goto.left);
+            relop = codes->u.if_goto.relop;
+            y = get_op_literal(codes->u.if_goto.right);
+            z = get_op_literal(codes->u.if_goto.dst);
+            sprintf(code_buffer, "IF %s %s %s GOTO %s", x, relop, y, z);
             free(x);
             free(y);
             free(z);
             break;
         case RETURN_CODE:
-            char *x = get_op_literal(codes->u.op);
+            x = get_op_literal(codes->u.op);
             sprintf(code_buffer, "RETURN %s", x);
             free(x);
             break;
         case DEC_SIZE_CODE:
-            assert(false);
+            x = get_op_literal(codes->u.dec.op);
+            sprintf(code_buffer, "DEC %s %d", x, codes->u.dec.size);
+            free(x);
             break;
         case ARG_CODE:
-            char *x = get_op_literal(codes->u.op);
+            x = get_op_literal(codes->u.op);
             sprintf(code_buffer, "ARG %s", x);
             free(x);
             break;
         case CALL_CODE:
-            char *x = get_op_literal(codes->u.call.left);
-            char *f = get_op_literal(codes->u.call.name);
+            x = get_op_literal(codes->u.call.left);
+            f = codes->u.call.name;
             sprintf(code_buffer, "%s := CALL %s", x, f);
             free(x);
-            free(f);
             break;
         case PARAM_CODE:
-            char *x = codes->u.node->name;
-            sprintf(code_buffer, "PARAM %s", x);
+            x = codes->u.node->name;
+            sprintf(code_buffer, "PARAM r%s", x);
             break;
         case READ_CODE:
-            char *x = get_op_literal(codes->u.op);
+            x = get_op_literal(codes->u.op);
             sprintf(code_buffer, "READ %s", x);
             free(x);
             break;
         case WRITE_CODE:
-            char *x = get_op_literal(codes->u.op);
+            x = get_op_literal(codes->u.op);
             sprintf(code_buffer, "WRITE %s", x);
             free(x);
             break;
@@ -293,6 +299,15 @@ void print_codes(InterCode *codes)
             assert(false);
             break;
         }
+        printf("%s\n", code_buffer);
         codes = codes->next;
     }
+}
+
+InterCode *new_dec_size_code(Operand *op, int size)
+{
+    InterCode *ret = new_inter_code(DEC_SIZE_CODE);
+    ret->u.dec.op = op;
+    ret->u.dec.size = size;
+    return ret;
 }

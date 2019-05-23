@@ -4,7 +4,7 @@
 // #define NDEBUG
 #include <assert.h>
 
-#include "TreeNode.h"
+typedef struct TreeNode_t TreeNode;
 
 typedef enum
 {
@@ -74,7 +74,7 @@ void setup();
 
 void print_semantic_error(int error_id, int line_num);
 
-void handle(TreeNode* root);
+char *strdup(const char *s);
 
 extern char *RELOP_NO_EQUAL;
 extern char *READ;

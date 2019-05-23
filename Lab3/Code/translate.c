@@ -32,7 +32,7 @@ InterCode *translate_Ext_def_list(TreeNode *ext_def_list)
 
 InterCode *translate_Ext_def(TreeNode *ext_def)
 {
-    assert(CHECK_NON_TYPE(ext_def, ExtDefList));
+    assert(CHECK_NON_TYPE(ext_def, ExtDef));
 
     if (CHECK_NON_TYPE(ext_def->children[1], FunDec) && CHECK_NON_TYPE(ext_def->children[2], CompSt))
     {
@@ -239,7 +239,7 @@ InterCode *translate_Exp(TreeNode *exp, Operand *place)
     else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[0], LP_T) && CHECK_TOKEN_TYPE(exp->children[2], RP_T))
     {
         assert(CHECK_NON_TYPE(exp->children[1], Exp));
-        assert(false);
+        ret = translate_Exp(exp->children[1], place);
     }
     else if (exp->num_of_children == 2 && CHECK_TOKEN_TYPE(exp->children[0], MINUS_T))
     {
@@ -249,7 +249,7 @@ InterCode *translate_Exp(TreeNode *exp, Operand *place)
         Operand *t1 = new_temp_op();
         InterCode *code1 = translate_Exp(exp->children[1], t1);
 
-        InterCode *code2 = new_arithmetic_code(MINUS_CODE,place,zero,t1);
+        InterCode *code2 = new_arithmetic_code(MINUS_CODE, place, zero, t1);
 
         ret = concat_inter_codes(2, code1, code2);
     }
@@ -262,6 +262,7 @@ InterCode *translate_Exp(TreeNode *exp, Operand *place)
     {
         TreeNode *id = exp->children[0];
         OperandWrapper *arg_list = malloc(sizeof(*arg_list));
+        arg_list->head = NULL;
         //ID LP Args RP
         InterCode *code1 = translate_Args(exp->children[2], arg_list);
         if (strcmp(WRITE, id->value.str_val) == 0)
@@ -274,7 +275,7 @@ InterCode *translate_Exp(TreeNode *exp, Operand *place)
             Operand *args = arg_list->head;
             while (args != NULL)
             {
-                code2 = concat_inter_codes(2, args, code2);
+                code2 = concat_inter_codes(2, new_arg_code(args), code2);
                 args = args->next;
             }
             ret = concat_inter_codes(3, code1, code2, new_call_code(place, id->value.str_val));
@@ -358,7 +359,7 @@ InterCode *translate_binary_arithmetic(TreeNode *exp, Operand *place)
         kind = DIV_CODE;
     }
 
-    InterCode *code3 = new_arithmetic_code(kind,place,left,right);
+    InterCode *code3 = new_arithmetic_code(kind, place, left, right);
 
     return concat_inter_codes(3, code1, code2, code3);
 }
@@ -388,7 +389,7 @@ InterCode *translate_Cond(TreeNode *exp, Operand *label_true, Operand *label_fal
         Operand *t2 = new_temp_op();
         InterCode *code1 = translate_Exp(exp->children[0], t1);
         InterCode *code2 = translate_Exp(exp->children[2], t2);
-        InterCode *code3 = new_if_goto_code(t1,t2,exp->children[1]->value.str_val,label_true);
+        InterCode *code3 = new_if_goto_code(t1, t2, exp->children[1]->value.str_val, label_true);
         InterCode *code4 = new_goto_code(label_false);
         ret = concat_inter_codes(4, code1, code2, code3, code4);
     }
@@ -417,7 +418,7 @@ InterCode *translate_Cond(TreeNode *exp, Operand *label_true, Operand *label_fal
         Operand *t1 = new_temp_op();
         Operand *zero = new_constant_op(0);
         InterCode *code1 = translate_Exp(exp, t1);
-        InterCode *code2 = new_if_goto_code(t1,zero,RELOP_NO_EQUAL,label_true);
+        InterCode *code2 = new_if_goto_code(t1, zero, RELOP_NO_EQUAL, label_true);
         InterCode *code3 = new_goto_code(label_false);
         ret = concat_inter_codes(3, code1, code2, code3);
     }
@@ -493,6 +494,15 @@ InterCode *translate_Var_dec(TreeNode *var_dec, OperandWrapper *wrapper)
     }
     else
     {
-        assert(false);
+        //reach here only when define
+        assert(var_dec->num_of_children == 3);
+        assert(var_dec->children[0]->num_of_children == 1);
+        //won't assign, so it's safe to make it NULL
+        wrapper->head = NULL;
+
+        TreeNode *id = var_dec->children[0]->children[0];
+        int value = var_dec->children[2]->value.int_val;
+
+        return new_dec_size_code(new_real_var_op(id->value.str_val), value);
     }
 }
