@@ -1,45 +1,4 @@
 FUNCTION main :
-DEC rop 8
-t34 := #0
-ri := t34
-t35 := #0
-rj := t35
-LABEL t2 :
-t5 := ri
-t6 := #2
-IF t5 < t6 GOTO t3
-GOTO t4
-LABEL t3 :
-LABEL t9 :
-t12 := rj
-t13 := #2
-IF t12 < t13 GOTO t10
-GOTO t11
-LABEL t10 :
-t16 := rj
-t17 := t16 * #4
-t18 := &rop + t17
-t20 := ri
-t21 := rj
-t19 := t20 + t21
-*t18 := t19
-t15 := t19
-t24 := rj
-t25 := #1
-t23 := t24 + t25
-rj := t23
-t22 := rj
-GOTO t9
-LABEL t11 :
-t28 := ri
-t29 := #1
-t27 := t28 + t29
-ri := t27
-t26 := ri
-t31 := #0
-rj := t31
-t30 := rj
-GOTO t2
-LABEL t4 :
-t33 := #0
-RETURN t33
+DEC ra 20
+t2 := #0
+RETURN t2

@@ -670,7 +670,7 @@ InterCode *translate_Var_dec(TreeNode *var_dec, OperandWrapper *wrapper, int siz
         // assert(var_dec->children[0]->num_of_children == 1);
         if (var_dec->children[0]->num_of_children != 1)
         {
-            printf("Cannot translate_\n");
+            printf("Cannot translate\n");
             exit(1);
         }
         //won't assign, so it's safe to make it NULL
