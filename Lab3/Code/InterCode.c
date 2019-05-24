@@ -276,14 +276,8 @@ void print_codes(InterCode *codes)
             break;
         case ARG_CODE:
             x = get_op_literal(codes->u.op);
-            if (codes->u.op->is_struct_arg == true)
-            {
-                sprintf(code_buffer, "ARG &%s", x);
-            }
-            else
-            {
-                sprintf(code_buffer, "ARG %s", x);
-            }
+
+            sprintf(code_buffer, "ARG %s", x);
 
             free(x);
             break;

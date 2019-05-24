@@ -1,11 +1,11 @@
 struct Detail{
  int score;
- int name;
+ int name[3];
  };
 
  int print(struct Detail para){
      write(para.score);
-     write(para.name);
+     write(para.name[2]);
      return 0;
  }
 
@@ -14,7 +14,7 @@ struct Detail{
      int b = 619;
      struct Detail c;
      c.score = a;
-     c.name = b;
+     c.name[2] = b;
      print(c);
      return 0;
  }

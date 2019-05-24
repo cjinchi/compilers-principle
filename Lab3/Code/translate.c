@@ -83,7 +83,7 @@ InterCode *translate_Var_list(TreeNode *var_list)
     assert(CHECK_NON_TYPE(var_list, VarList));
 
     InterCode *ret = NULL;
-    InterCode *addr_to_normal = NULL;
+    // InterCode *addr_to_normal = NULL;
 
     while (var_list->num_of_children == 1 || var_list->num_of_children == 3)
     {
@@ -95,10 +95,10 @@ InterCode *translate_Var_list(TreeNode *var_list)
         //core code
         InterCode *code = new_param_code(id->value.str_val);
         ret = concat_inter_codes(2, ret, code);
-        if (CHECK_NON_TYPE(var_list->children[0]->children[0]->children[0], StructSpecifier))
-        {
-            addr_to_normal = concat_inter_codes(2, addr_to_normal, new_assign_star_code(new_real_var_op(id->value.str_val), new_real_var_op(id->value.str_val)));
-        }
+        // if (CHECK_NON_TYPE(var_list->children[0]->children[0]->children[0], StructSpecifier))
+        // {
+        //     addr_to_normal = concat_inter_codes(2, addr_to_normal, new_assign_star_code(new_real_var_op(id->value.str_val), new_real_var_op(id->value.str_val)));
+        // }
 
         if (var_list->num_of_children == 3)
         {
@@ -109,7 +109,7 @@ InterCode *translate_Var_list(TreeNode *var_list)
             break;
         }
     }
-    ret = concat_inter_codes(2, ret, addr_to_normal);
+    // ret = concat_inter_codes(2, ret, addr_to_normal);
     return ret;
 }
 
@@ -245,7 +245,8 @@ InterCode *translate_Exp(TreeNode *exp, Operand *place)
 
             Operand *t1 = wrapper->head;
             Operand *t2 = new_temp_op();
-            InterCode *code1 = new_assign_and_code(t2, t1, new_constant_op(size));
+            // InterCode *code1 = new_assign_and_code(t2, t1, new_constant_op(size));
+            InterCode *code1 = new_arithmetic_code(PLUS_CODE, t2, t1, new_constant_op(size));
             Operand *t3 = new_temp_op();
             InterCode *code2 = translate_Exp(exp2, t3);
             InterCode *code3 = new_star_assign_code(t2, t3);
@@ -375,7 +376,8 @@ InterCode *translate_Exp(TreeNode *exp, Operand *place)
         int size = get_struct_offset(wrapper, exp->children[0], exp->children[2]);
         Operand *t1 = wrapper->head;
         Operand *t2 = new_temp_op();
-        InterCode *code1 = new_assign_and_code(t2, t1, new_constant_op(size));
+        // InterCode *code1 = new_assign_and_code(t2, t1, new_constant_op(size));
+        InterCode *code1 = new_arithmetic_code(PLUS_CODE, t2, t1, new_constant_op(size));
         InterCode *code2 = new_assign_star_code(place, t2);
         ret = concat_inter_codes(2, code1, code2);
     }
@@ -503,38 +505,39 @@ InterCode *translate_Cond(TreeNode *exp, Operand *label_true, Operand *label_fal
 InterCode *translate_Args(TreeNode *args, OperandWrapper *list)
 {
     InterCode *ret = NULL;
-    Type *type = analyse_exp(args->children[0]);
-    if (type->kind == STRUCTURE)
-    {
-        TreeNode *exp = args->children[0];
-        if (exp->num_of_children == 1 && CHECK_NON_TYPE(exp->children[0], ID_T))
-        {
-            Operand *t1 = new_real_var_op(exp->children[0]->value.str_val);
-            t1->is_struct_arg = true;
-            list->head = concat_operands(2, list->head, t1);
-        }
-        else if (exp->num_of_children == 3 && CHECK_NON_TYPE(exp->children[0], LP_T))
-        {
-            while (exp->num_of_children == 3 && CHECK_NON_TYPE(exp->children[0], LP_T))
-            {
-                exp = exp->children[1];
-            }
-            Operand *t1 = new_real_var_op(exp->children[0]->value.str_val);
-            t1->is_struct_arg = true;
-            list->head = concat_operands(2, list->head, t1);
-        }
-        else
-        {
-            assert(false);
-        }
-    }
-    else
-    {
-        Operand *t1 = new_temp_op();
-        ret = translate_Exp(args->children[0], t1);
-        list->head = concat_operands(2, list->head, t1);
-    }
+    // Type *type = analyse_exp(args->children[0]);
+    // if (type->kind == STRUCTURE)
+    // {
+    //     TreeNode *exp = args->children[0];
+    //     if (exp->num_of_children == 1 && CHECK_TOKEN_TYPE(exp->children[0], ID_T))
+    //     {
+    //         Operand *t1 = new_real_var_op(exp->children[0]->value.str_val);
+    //         t1->is_struct_arg = true;
+    //         list->head = concat_operands(2, list->head, t1);
+    //     }
+    //     else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[0], LP_T))
+    //     {
+    //         while (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[0], LP_T))
+    //         {
+    //             exp = exp->children[1];
+    //         }
+    //         Operand *t1 = new_real_var_op(exp->children[0]->value.str_val);
+    //         t1->is_struct_arg = true;
+    //         list->head = concat_operands(2, list->head, t1);
+    //     }
+    //     else
+    //     {
+    //         // printf("%d\n", exp->num_of_children);
+    //         assert(false);
+    //     }
+    // }
+    // else
+    // {
 
+    // }
+    Operand *t1 = new_temp_op();
+    ret = translate_Exp(args->children[0], t1);
+    list->head = concat_operands(2, list->head, t1);
     if (args->num_of_children == 3)
     {
         return concat_inter_codes(2, ret, translate_Args(args->children[2], list));
@@ -611,7 +614,8 @@ InterCode *translate_Var_dec(TreeNode *var_dec, OperandWrapper *wrapper, int siz
         if (size > 0)
         {
             //it's struct, need to DEC
-            return new_dec_size_code(t1, size);
+            Operand *t2 = new_temp_op();
+            return concat_inter_codes(2, new_dec_size_code(t2, size), new_assign_and_code(t1, t2, new_constant_op(0)));
         }
         else
         {
