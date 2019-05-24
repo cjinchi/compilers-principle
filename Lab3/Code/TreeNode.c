@@ -270,6 +270,8 @@ bool check_token_type(TreeNode *node, int type)
 
 void handle(TreeNode *root)
 {
+
+    // print_tree(root);
     analyse_program(root);
 
     print_codes(translate_Program(root));

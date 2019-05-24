@@ -89,7 +89,12 @@ InterCode *translate_Var_list(TreeNode *var_list)
     {
 
         TreeNode *var_dec = var_list->children[0]->children[1];
-        assert(var_dec->num_of_children == 1);
+        // assert(var_dec->num_of_children == 1);
+        if (var_dec->num_of_children != 1)
+        {
+            printf("Cannot translate\n");
+            exit(1);
+        }
         TreeNode *id = var_dec->children[0];
 
         //core code
@@ -391,7 +396,6 @@ InterCode *translate_Exp(TreeNode *exp, Operand *place)
             InterCode *code7 = new_assign_star_code(place, t6);
             ret = concat_inter_codes(5, code1, code2, code5, code6, code7);
         }
-
     }
     else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[1], DOT_T))
     {
@@ -663,7 +667,12 @@ InterCode *translate_Var_dec(TreeNode *var_dec, OperandWrapper *wrapper, int siz
     {
         //reach here only when define
         assert(var_dec->num_of_children == 4);
-        assert(var_dec->children[0]->num_of_children == 1);
+        // assert(var_dec->children[0]->num_of_children == 1);
+        if (var_dec->children[0]->num_of_children != 1)
+        {
+            printf("Cannot translate_\n");
+            exit(1);
+        }
         //won't assign, so it's safe to make it NULL
         wrapper->head = NULL;
 
