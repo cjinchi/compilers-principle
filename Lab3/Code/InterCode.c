@@ -1,10 +1,11 @@
 #include "InterCode.h"
-#include "type.h"
-#include "stdlib.h"
+#include "Type.h"
+#include <stdlib.h>
 #include <stdarg.h>
 
 InterCode *ic_list_head = NULL;
 InterCode *ic_list_tail = NULL;
+FILE *dst = NULL;
 
 int temp_var_id = 1;
 
@@ -64,6 +65,7 @@ Operand *new_temp_op()
     Operand *ret = malloc(sizeof(*ret));
     ret->kind = TEMP_VARIABLE;
     ret->u.var_no = temp_var_id;
+    ret->is_struct_arg = false;
     temp_var_id++;
     ret->next = NULL;
     return ret;
@@ -74,6 +76,7 @@ Operand *new_constant_op(int n)
     Operand *ret = malloc(sizeof(*ret));
     ret->kind = CONSTANT;
     ret->u.value = n;
+    ret->is_struct_arg = false;
     ret->next = NULL;
     return ret;
 }
@@ -91,6 +94,7 @@ Operand *new_real_var_op(char *name)
         Operand *ret = malloc(sizeof(*ret));
         ret->kind = REAL_VARIABLE;
         ret->u.var_node = temp;
+        ret->is_struct_arg = false;
         ret->next = NULL;
         temp->op = ret;
         return ret;
@@ -272,7 +276,15 @@ void print_codes(InterCode *codes)
             break;
         case ARG_CODE:
             x = get_op_literal(codes->u.op);
-            sprintf(code_buffer, "ARG %s", x);
+            if (codes->u.op->is_struct_arg == true)
+            {
+                sprintf(code_buffer, "ARG &%s", x);
+            }
+            else
+            {
+                sprintf(code_buffer, "ARG %s", x);
+            }
+
             free(x);
             break;
         case CALL_CODE:
@@ -283,6 +295,7 @@ void print_codes(InterCode *codes)
             break;
         case PARAM_CODE:
             x = codes->u.node->name;
+            //'r' for real varible (not temp), same implement in get_op_literal
             sprintf(code_buffer, "PARAM r%s", x);
             break;
         case READ_CODE:
@@ -295,11 +308,36 @@ void print_codes(InterCode *codes)
             sprintf(code_buffer, "WRITE %s", x);
             free(x);
             break;
+        case ASSIGN_AND_CODE:
+            x = get_op_literal(codes->u.binop.result);
+            y = get_op_literal(codes->u.binop.left);
+            z = get_op_literal(codes->u.binop.right);
+
+            sprintf(code_buffer, "%s := &%s + %s", x, y, z);
+            free(x);
+            free(y);
+            free(z);
+
+            break;
+        case STAR_ASSIGN_CODE:
+            x = get_op_literal(codes->u.assign.left);
+            y = get_op_literal(codes->u.assign.right);
+            sprintf(code_buffer, "*%s := %s", x, y);
+            free(x);
+            free(y);
+            break;
+        case ASSIGN_STAR_CODE:
+            x = get_op_literal(codes->u.assign.left);
+            y = get_op_literal(codes->u.assign.right);
+            sprintf(code_buffer, "%s := *%s", x, y);
+            free(x);
+            free(y);
+            break;
         default:
             assert(false);
             break;
         }
-        printf("%s\n", code_buffer);
+        fprintf(dst, "%s\n", code_buffer);
         codes = codes->next;
     }
 }
@@ -309,5 +347,30 @@ InterCode *new_dec_size_code(Operand *op, int size)
     InterCode *ret = new_inter_code(DEC_SIZE_CODE);
     ret->u.dec.op = op;
     ret->u.dec.size = size;
+    return ret;
+}
+
+InterCode *new_assign_and_code(Operand *result, Operand *addr, Operand *offset)
+{
+    InterCode *ret = new_inter_code(ASSIGN_AND_CODE);
+    ret->u.binop.result = result;
+    ret->u.binop.left = addr;
+    ret->u.binop.right = offset;
+    return ret;
+}
+
+InterCode *new_star_assign_code(Operand *left, Operand *right)
+{
+    InterCode *ret = new_inter_code(STAR_ASSIGN_CODE);
+    ret->u.assign.left = left;
+    ret->u.assign.right = right;
+    return ret;
+}
+
+InterCode *new_assign_star_code(Operand *left, Operand *right)
+{
+    InterCode *ret = new_inter_code(ASSIGN_STAR_CODE);
+    ret->u.assign.left = left;
+    ret->u.assign.right = right;
     return ret;
 }

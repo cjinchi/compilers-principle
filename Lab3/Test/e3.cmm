@@ -1,0 +1,20 @@
+struct Detail{
+ int score;
+ int name;
+ };
+
+ int print(struct Detail para){
+     write(para.score);
+     write(para.name);
+     return 0;
+ }
+
+ int main(){
+     int a = 534;
+     int b = 619;
+     struct Detail c;
+     c.score = a;
+     c.name = b;
+     print(c);
+     return 0;
+ }

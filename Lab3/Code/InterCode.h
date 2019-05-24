@@ -28,7 +28,11 @@ struct InterCode_
         CALL_CODE,
         PARAM_CODE,
         READ_CODE,
-        WRITE_CODE
+        WRITE_CODE,
+
+        ASSIGN_AND_CODE,
+        ASSIGN_STAR_CODE,
+        STAR_ASSIGN_CODE
 
     } kind;
     union {
@@ -69,6 +73,8 @@ extern InterCode *ic_list_tail;
 
 extern int temp_var_id;
 
+extern FILE* dst;
+
 InterCode *new_inter_code(int kind);
 
 InterCode *concat_inter_codes(int num, ...);
@@ -104,6 +110,13 @@ InterCode *new_arithmetic_code(int kind, Operand *result, Operand *left, Operand
 InterCode *new_if_goto_code(Operand *left, Operand *right, char *relop, Operand *dst);
 
 InterCode *new_dec_size_code(Operand *op, int size);
+
+InterCode *new_assign_and_code(Operand *result, Operand *arr, Operand *offset);
+
+InterCode *new_star_assign_code(Operand *left, Operand *right);
+
+InterCode *new_assign_star_code(Operand *left, Operand *right);
+
 void print_codes(InterCode *codes);
 
 #endif

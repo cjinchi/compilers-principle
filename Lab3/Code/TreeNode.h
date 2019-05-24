@@ -6,6 +6,11 @@
 
 #include "util.h"
 #include "string.h"
+#include "Type.h"
+#include "Operand.h"
+
+typedef struct Type_ Type;
+typedef struct OperandWrapper_ OperandWrapper;
 
 struct TreeNode_t
 {
@@ -40,6 +45,9 @@ char *get_literal(TreeNode *node);
 
 bool check_nonterminal_type(TreeNode *node, int type);
 bool check_token_type(TreeNode *node, int type);
+
+int get_size(Type *type);
+int get_struct_offset(OperandWrapper *addr, TreeNode *exp, TreeNode *id);
 
 #define CHECK_NON_TYPE(node, type) (check_nonterminal_type(node, type) == true)
 #define CHECK_TOKEN_TYPE(node, type) (check_token_type(node, type) == true)

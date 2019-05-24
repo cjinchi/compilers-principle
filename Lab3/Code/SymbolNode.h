@@ -1,11 +1,13 @@
 #ifndef SYMBOL_NODE_H
 #define SYMBOL_NODE_H
 
-#include "type.h"
+#include "Type.h"
 #include "Operand.h"
 
+typedef struct FieldList_ FieldList;
 typedef struct Operand_ Operand;
 typedef struct SymbolNode_t SymbolNode;
+typedef struct Type_ Type;
 
 struct SymbolNode_t
 {

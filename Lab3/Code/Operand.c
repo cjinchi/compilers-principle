@@ -52,9 +52,9 @@ char *get_op_literal(Operand *op)
     case CONSTANT:
         sprintf(op_literal_buffer, "#%d", op->u.value);
         break;
-    case ADDRESS:
-        assert(false);
-        break;
+        // case ADDRESS:
+        //     assert(false);
+        //     break;
 
     default:
         assert(false);

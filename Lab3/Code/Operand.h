@@ -14,8 +14,8 @@ struct Operand_
     {
         TEMP_VARIABLE,
         REAL_VARIABLE,
-        CONSTANT,
-        ADDRESS
+        CONSTANT
+        // ADDRESS
     } kind;
     union {
         //for temp_var
@@ -24,9 +24,11 @@ struct Operand_
         int value;
         //for real_var
         SymbolNode *var_node;
-        //for address
-        Operand *addr;
+        // //for address
+        // Operand *addr;
     } u;
+
+    bool is_struct_arg;
 
     //for some case
     Operand *next;
@@ -38,6 +40,6 @@ struct OperandWrapper_
 };
 
 Operand *concat_operands(int num, ...);
-char* get_op_literal(Operand* op);
+char *get_op_literal(Operand *op);
 
 #endif

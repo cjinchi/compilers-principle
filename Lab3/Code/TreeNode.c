@@ -273,3 +273,67 @@ void handle(TreeNode *root)
     analyse_program(root);
     print_codes(translate_Program(root));
 }
+
+int get_size(Type *type)
+{
+    assert(type != NULL);
+    switch (type->kind)
+    {
+    case BASIC:
+        return 4;
+    case ARRAY:
+        return type->u.array.size * 4;
+    case STRUCTURE:;
+        //The SEMI above is to disable c error
+        FieldList *fields = type->u.structure->next;
+        int total = 0;
+        while (fields != 0)
+        {
+            total += get_size(fields->type);
+            fields = fields->next;
+        }
+        return total;
+    default:
+        assert(false);
+    }
+}
+
+int get_struct_offset(OperandWrapper *addr, TreeNode *exp, TreeNode *id)
+{
+    assert(CHECK_NON_TYPE(exp, Exp));
+    assert(CHECK_TOKEN_TYPE(id, ID_T));
+
+    if (exp->num_of_children == 1 && CHECK_TOKEN_TYPE(exp->children[0], ID_T))
+    {
+        int ret = 0;
+        SymbolNode *node = look_up_variable_list(exp->children[0]->value.str_val);
+        addr->head = new_real_var_op(node->name);
+        FieldList *fields = node->type->u.structure->next;
+        while (fields != NULL && strcmp(fields->name, id->value.str_val) != 0)
+        {
+            ret += get_size(fields->type);
+            fields = fields->next;
+        }
+        return ret;
+    }
+    else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[0], LP_T))
+    {
+        return get_struct_offset(addr, exp->children[1], id);
+    }
+    else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[1], DOT_T))
+    {
+        int ret = get_struct_offset(addr, exp->children[0], exp->children[2]);
+        Type *type = analyse_exp(exp);
+        FieldList *fields = type->u.structure->next;
+        while (fields != NULL && strcmp(fields->name, id->value.str_val) != 0)
+        {
+            ret += get_size(fields->type);
+            fields = fields->next;
+        }
+        return ret;
+    }
+    else
+    {
+        assert(false);
+    }
+}

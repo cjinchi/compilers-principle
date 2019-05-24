@@ -3,7 +3,9 @@
     #include "TreeNode.h"
     #include "util.h"
     #include <string.h>
-    int yycolumn = 1;
+    #include "InterCode.h"
+     int yycolumn = 1;
+     extern FILE* dst;
     #define YY_USER_ACTION \
         yylloc.first_line = yylloc.last_line = yylineno; \
         yylloc.first_column = yycolumn; \
@@ -56,7 +58,7 @@ int main(int argc, char **argv)
 {
     setup();
 
-    if (argc <= 1)
+    if (argc <= 2)
         return 1;
     FILE *f = fopen(argv[1], "r");
     if (!f)
@@ -64,8 +66,16 @@ int main(int argc, char **argv)
         perror(argv[1]);
         return 1;
     }
+    dst = fopen(argv[2],"w");
+    if(!dst){
+        perror(argv[2]);
+        return 1;
+    }
+
     yyrestart(f);
     // yydebug = 1;
     yyparse();
+
+    fclose(dst);
     return 0;
 }

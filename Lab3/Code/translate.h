@@ -37,10 +37,10 @@ InterCode *translate_Def_list(TreeNode *def_list);
 
 InterCode *translate_Def(TreeNode *def);
 
-InterCode *translate_Dec_list(TreeNode *dec_list);
+InterCode *translate_Dec_list(TreeNode *dec_list, int size);
 
-InterCode *translate_Dec(TreeNode *dec);
+InterCode *translate_Dec(TreeNode *dec, int size);
 
-InterCode *translate_Var_dec(TreeNode *var_dec, OperandWrapper *wrapper);
+InterCode *translate_Var_dec(TreeNode *var_dec, OperandWrapper *wrapper, int size);
 
 #endif
