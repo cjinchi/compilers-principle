@@ -8,7 +8,6 @@ SymbolNode *symbol_list = NULL;
 
 SymbolNode *look_up_variable_list(char *name)
 {
-    printf("%s\n", name);
     SymbolNode *p = symbol_list;
     while (p != NULL)
     {

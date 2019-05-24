@@ -227,9 +227,20 @@ InterCode *translate_Exp(TreeNode *exp, Operand *place)
             Operand *t2 = new_temp_op();
             InterCode *code2 = new_arithmetic_code(STAR_CODE, t2, t1, new_constant_op(4));
             Operand *t3 = new_temp_op();
-            Operand *t4 = new_real_var_op(exp11->children[0]->value.str_val);
-            InterCode *code3 = new_assign_and_code(t3, t4, t2);
+            InterCode *code3 = NULL;
+            if (exp11->num_of_children == 1)
+            {
+
+                Operand *t4 = new_real_var_op(exp11->children[0]->value.str_val);
+                code3 = new_assign_and_code(t3, t4, t2);
+            }
+            else
+            {
+                code3 = concat_inter_codes(2, translate_Exp(exp11, t3), new_arithmetic_code(PLUS_CODE, t3, t3, t2));
+            }
+
             Operand *t5 = new_temp_op();
+
             InterCode *code4 = translate_Exp(exp2, t5);
             InterCode *code5 = new_star_assign_code(t3, t5);
             InterCode *code6 = new_assign_code(place, t5);
@@ -354,17 +365,33 @@ InterCode *translate_Exp(TreeNode *exp, Operand *place)
     else if (exp->num_of_children == 4 && CHECK_NON_TYPE(exp->children[0], Exp) && CHECK_TOKEN_TYPE(exp->children[1], LB_T) && CHECK_NON_TYPE(exp->children[2], Exp) && CHECK_TOKEN_TYPE(exp->children[3], RB_T))
     {
         //Exp -> Exp1 LB Exp2 RB
+
         TreeNode *exp1 = exp->children[0];
         TreeNode *exp2 = exp->children[2];
         Operand *t1 = new_temp_op();
         InterCode *code1 = translate_Exp(exp2, t1);
         Operand *t2 = new_temp_op();
         InterCode *code2 = new_arithmetic_code(STAR_CODE, t2, t1, new_constant_op(4));
-        Operand *t3 = new_temp_op();
-        Operand *t4 = new_real_var_op(exp1->children[0]->value.str_val);
-        InterCode *code3 = new_assign_and_code(t3, t4, t2);
-        InterCode *code4 = new_assign_star_code(place, t3);
-        ret = concat_inter_codes(4, code1, code2, code3, code4);
+
+        if (exp1->num_of_children == 1)
+        {
+            Operand *t3 = new_temp_op();
+            Operand *t4 = new_real_var_op(exp1->children[0]->value.str_val);
+            InterCode *code3 = new_assign_and_code(t3, t4, t2);
+            InterCode *code4 = new_assign_star_code(place, t3);
+            ret = concat_inter_codes(4, code1, code2, code3, code4);
+        }
+        else
+        {
+            //array in structure
+            Operand *t5 = new_temp_op();
+            InterCode *code5 = translate_Exp(exp1, t5);
+            Operand *t6 = new_temp_op();
+            InterCode *code6 = new_arithmetic_code(PLUS_CODE, t6, t5, t2);
+            InterCode *code7 = new_assign_star_code(place, t6);
+            ret = concat_inter_codes(5, code1, code2, code5, code6, code7);
+        }
+
     }
     else if (exp->num_of_children == 3 && CHECK_TOKEN_TYPE(exp->children[1], DOT_T))
     {
@@ -378,7 +405,17 @@ InterCode *translate_Exp(TreeNode *exp, Operand *place)
         Operand *t2 = new_temp_op();
         // InterCode *code1 = new_assign_and_code(t2, t1, new_constant_op(size));
         InterCode *code1 = new_arithmetic_code(PLUS_CODE, t2, t1, new_constant_op(size));
-        InterCode *code2 = new_assign_star_code(place, t2);
+        InterCode *code2 = NULL;
+        Type *type = analyse_exp(exp);
+        if (type->kind == STRUCTURE || type->kind == ARRAY)
+        {
+            code2 = new_assign_code(place, t2);
+        }
+        else
+        {
+            code2 = new_assign_star_code(place, t2);
+        }
+
         ret = concat_inter_codes(2, code1, code2);
     }
     else if (exp->num_of_children == 1 && CHECK_TOKEN_TYPE(exp->children[0], ID_T))

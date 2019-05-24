@@ -1,13 +1,21 @@
-struct Product{
- int weight;
- int price;
+struct Operands
+ {
+ int o1;
+ int o2;
  };
 
- int main()
+ int add(struct Operands temp)
  {
- struct Product p1;
- p1.weight = 123;
- p1.price = 56;
- write(p1.weight * p1.price);
+ return (temp.o1 + temp.o2);
+ }
+
+ int main()
+{
+ int n;
+ struct Operands op;
+ op.o1 = 1;
+ op.o2 = 2;
+ n = add(op);
+ write(n);
  return 0;
  }
