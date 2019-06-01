@@ -1,0 +1,29 @@
+struct mystru{
+    int mya;
+    int myb;
+    int myd[100];
+};
+
+struct Detail{
+ int score;
+ int name[3];
+ struct mystru myc;
+ };
+
+ int print(struct Detail para){
+     write(para.score);
+     write(para.name[2]);
+     write(para.myc.myd[99]);
+     return 0;
+ }
+
+ int main(){
+     int a = 534;
+     int b = 619;
+     struct Detail c;
+     c.score = a;
+     c.name[2] = b;
+     c.myc.myd[99] = 10086;
+     print(c);
+     return 0;
+ }

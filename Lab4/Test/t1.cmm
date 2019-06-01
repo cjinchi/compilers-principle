@@ -1,0 +1,16 @@
+struct mys{
+int myvar;
+};
+struct Product{
+ int weight;
+ struct mys price;
+ };
+
+ int main()
+ {
+ struct Product p1;
+ p1.weight = 123;
+ p1.price.myvar = 56;
+ write(p1.weight * p1.price.myvar);
+ return 0;
+ }
