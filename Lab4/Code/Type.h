@@ -6,6 +6,8 @@
 
 typedef struct Type_ Type;
 typedef struct FieldList_ FieldList;
+typedef struct TreeNode_t TreeNode;
+
 
 struct Type_
 {

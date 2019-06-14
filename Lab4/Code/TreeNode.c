@@ -6,6 +6,7 @@
 #include "util.h"
 #include "analyse_tree.h"
 #include "translate.h"
+#include "mips_translate.h"
 
 TreeNode *create_token_node(int t_type, int first_line)
 {
@@ -270,11 +271,19 @@ bool check_token_type(TreeNode *node, int type)
 
 void handle(TreeNode *root)
 {
+    //This function is called in syntax.y, once the program tree is built
 
+    //Exp1
     // print_tree(root);
+    
+    //Exp2
     analyse_program(root);
 
-    print_codes(translate_Program(root));
+    //Exp3
+    // print_codes(translate_Program(root));
+    
+    //Exp4
+    print_mips_code(translate_Program(root));
 }
 
 int get_size(Type *type)

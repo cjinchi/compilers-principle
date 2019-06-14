@@ -119,4 +119,5 @@ InterCode *new_assign_star_code(Operand *left, Operand *right);
 
 void print_codes(InterCode *codes);
 
+
 #endif

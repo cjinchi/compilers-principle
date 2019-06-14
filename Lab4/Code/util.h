@@ -4,8 +4,6 @@
 #define NDEBUG
 #include <assert.h>
 
-typedef struct TreeNode_t TreeNode;
-
 typedef enum
 {
     false,
@@ -79,5 +77,6 @@ char *strdup(const char *s);
 extern char *RELOP_NO_EQUAL;
 extern char *READ;
 extern char *WRITE;
+
 
 #endif
